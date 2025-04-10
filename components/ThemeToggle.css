@@ -1,6 +1,7 @@
 .wrapper {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
 }
 
 #theme-toggle {
@@ -19,6 +20,7 @@
   border-radius: 25px;
   transition: 500ms;
   overflow: hidden;
+  vertical-align: middle;
 }
 
 .toggle-button {
