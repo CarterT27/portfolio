@@ -88,7 +88,7 @@ export default function Header() {
           <img
             src="/hero.png"
             alt="Carter Tran"
-            className="rounded-lg w-auto h-auto max-w-full max-h-[calc(100vh-4rem)] object-contain"
+            className="rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain"
           />
         </div>
       </div>
