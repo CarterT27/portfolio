@@ -4,8 +4,36 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 
+// Custom hook for typing effect
+const useTypingEffect = (text: string, speed: number = 100) => {
+  const [displayText, setDisplayText] = useState("");
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+
+  useEffect(() => {
+    // Reset state when component mounts
+    setDisplayText("");
+    setIsTypingComplete(false);
+    
+    let currentIndex = 0;
+    const intervalId = setInterval(() => {
+      if (currentIndex < text.length) {
+        setDisplayText(text.substring(0, currentIndex + 1));
+        currentIndex++;
+      } else {
+        setIsTypingComplete(true);
+        clearInterval(intervalId);
+      }
+    }, speed);
+
+    return () => clearInterval(intervalId);
+  }, [text, speed]);
+
+  return { displayText, isTypingComplete };
+};
+
 export default function Header() {
   const [showArrow, setShowArrow] = useState(true);
+  const { displayText, isTypingComplete } = useTypingEffect("Carter Tran", 150);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,7 +55,10 @@ export default function Header() {
     <>
       <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
         <div className="text-center lg:text-left max-w-2xl">
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 font-['Rokiest'] tracking-wider">Carter Tran</h1>
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 font-['Rokiest'] tracking-wider">
+            {displayText}
+            {!isTypingComplete && <span className="animate-pulse">|</span>}
+          </h1>
           <p className="text-xl md:text-2xl mx-auto text-muted-foreground mb-12">
             Software engineer and data scientist with a passion for building elegant solutions to complex problems. Currently focused on
             machine learning and software development.
