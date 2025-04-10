@@ -23,7 +23,7 @@ export default function Home() {
             <div className="lg:col-span-7">
               <Timeline />
             </div>
-            <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-[20vh] h-[400px]">
+            <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-[20vh] lg:h-[min(100%,400px)]">
               <Avatar />
             </div>
           </div>

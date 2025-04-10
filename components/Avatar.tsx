@@ -117,7 +117,7 @@ export default function Avatar() {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="w-[300px] h-[300px] bg-card/50 rounded-lg shadow-md border relative overflow-hidden">
+      <div className="w-[min(100%,400px)] aspect-square bg-card/50 rounded-lg shadow-md border relative overflow-hidden">
         {/* Background Layer */}
         <div className="absolute inset-0 z-0">
           <Image
