@@ -74,7 +74,7 @@ export default function Navbar() {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="flex items-center space-x-2 text-sm font-medium text-foreground"
             >
-              <span>{currentSection}</span>
+              <span className="text-primary font-semibold">{currentSection}</span>
               <FontAwesomeIcon
                 icon={faChevronDown}
                 className={`transition-transform duration-200 ${
@@ -89,7 +89,11 @@ export default function Navbar() {
                     <button
                       key={item.id}
                       onClick={() => scrollToSection(item.id)}
-                      className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-primary/10"
+                      className={`w-full text-left px-4 py-2 text-sm 
+                        ${currentSection === item.label 
+                          ? "bg-primary/10 text-primary font-semibold"
+                          : "text-foreground hover:bg-primary/5"
+                        }`}
                     >
                       {item.label}
                     </button>
@@ -105,11 +109,16 @@ export default function Navbar() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  showNavbar ? "text-foreground" : "text-foreground/80"
-                }`}
+                className={`text-sm font-medium transition-colors relative
+                  ${currentSection === item.label
+                    ? "text-primary"
+                    : showNavbar ? "text-foreground hover:text-primary" : "text-foreground/80 hover:text-primary"
+                  }`}
               >
                 {item.label}
+                {currentSection === item.label && (
+                  <span className="absolute bottom-[-8px] left-0 w-full h-0.5 bg-primary rounded-full"></span>
+                )}
               </button>
             ))}
           </div>
