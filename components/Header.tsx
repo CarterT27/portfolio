@@ -297,18 +297,18 @@ export default function Header() {
   return (
     <>
       <div className="relative flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 px-4 md:px-8 lg:px-16">
-        <div className="text-center lg:text-left max-w-2xl">
+        <div className="text-center lg:text-left max-w-2xl w-full">
           <h1 className="text-6xl md:text-7xl font-bold mb-6 font-['Rokiest'] tracking-wider">
             <span className="inline-block min-w-[300px] sm:min-w-[350px] md:min-w-[400px] lg:min-w-[500px] text-left">
               {nameText}
               {nameShowCursor && <span className="animate-pulse">|</span>}
             </span>
           </h1>
-          <p className="text-xl md:text-2xl mx-auto text-muted-foreground mb-12 h-[1.5em] relative">
+          <p className="text-xl md:text-2xl mx-auto text-muted-foreground mb-12 h-[1.5em] relative w-full">
             <span className="absolute opacity-0 select-none" aria-hidden="true">
               {longestBlurb}
             </span>
-            <span className="absolute">
+            <span className="absolute left-0 right-0 text-center lg:text-left">
               {blurbText}{shouldStartBlurbAnimation && <span className="animate-pulse">|</span>}
             </span>
           </p>
