@@ -46,6 +46,12 @@ export default function Header() {
         <div
           className="fixed bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer animate-bounce z-10 transition-opacity duration-1000"
           aria-label="Scroll down"
+          onClick={() => {
+            const experienceSection = document.getElementById('experience');
+            if (experienceSection) {
+              experienceSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
         >
           <FontAwesomeIcon
             icon={faChevronDown}
