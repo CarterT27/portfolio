@@ -135,12 +135,12 @@ export default function Header() {
   // Array of possible blurbs
   const blurbs = [
     "Tinkerer, builder, problem solver",
-    "Tinkerer, problem solver, builder",
-    "Builder, tinkerer, problem solver",
-    "Builder, problem solver, tinkerer",
-    "Problem solver, builder, tinkerer",
-    "Problem solver, tinkerer, builder",
-  ];
+    "ML engineer, data scientist, researcher",
+    "Transforming data into meaningful insights",
+    "Building scalable and performant software solutions",
+    "Cars, code, and culinary adventures",
+    "On the lookout for the next big thing"
+];
 
   // Use the blurb cycler hook with the shouldStart condition
   const { displayText: blurbText } = useBlurbCycler(blurbs, shouldStartBlurbAnimation, 50, 30, 3000);
