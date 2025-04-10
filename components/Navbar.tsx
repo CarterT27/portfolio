@@ -54,7 +54,14 @@ export default function Navbar() {
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+      const navbarHeight = document.querySelector('nav')?.clientHeight || 0;
+      const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset;
+      
+      window.scrollTo({
+        top: sectionPosition - navbarHeight,
+        behavior: 'smooth'
+      });
+      
       setIsDropdownOpen(false);
     }
   };
@@ -118,7 +125,7 @@ export default function Navbar() {
                 >
                   {item.label}
                 </button>
-                
+
                 <AnimatePresence>
                   {currentSection === item.label && (
                     <motion.div 
