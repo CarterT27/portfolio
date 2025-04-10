@@ -13,7 +13,7 @@ import { useTheme } from "next-themes"
 
 // Theme-aware image component that switches between dark and light variants
 function ThemeAwareImage({ src, alt, className, scale }: { src: string; alt: string; className?: string; scale?: number }) {
-  const { theme } = useTheme()
+  const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
   // Prevent hydration mismatch
@@ -27,7 +27,7 @@ function ThemeAwareImage({ src, alt, className, scale }: { src: string; alt: str
   if (!mounted) return <img src={src} alt={alt} className={className} style={scaleStyle} />;
 
   // Check if this is a logo that needs a dark mode variant
-  const isDarkTheme = theme === 'dark';
+  const isDarkTheme = resolvedTheme === 'dark';
 
   if (isDarkTheme) {
     // Check for PNG images

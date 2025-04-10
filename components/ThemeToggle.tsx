@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import "./ThemeToggle.css"
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
   // Avoid hydration mismatch
@@ -20,8 +20,8 @@ export default function ThemeToggle() {
       <input 
         type="checkbox"
         id="theme-toggle"
-        checked={theme === "dark"}
-        onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
+        checked={resolvedTheme === "dark"}
+        onChange={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       />
       <label htmlFor="theme-toggle" className="toggle">
         <span className="toggle-button">
