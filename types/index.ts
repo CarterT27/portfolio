@@ -18,6 +18,7 @@ export interface Experience {
   date: string
   description: string
   avatar_state: AvatarState
+  url?: string // Optional URL for the company
 }
 
 export interface Project {

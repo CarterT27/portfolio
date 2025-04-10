@@ -13,6 +13,7 @@ export async function getExperiences(): Promise<Experience[]> {
       role: "Software Development Engineer Intern",
       date: "Expected Summer 2025",
       description: "Incoming SDEI at Amazon.",
+      url: "https://www.amazon.com",
       avatar_state: {
         background: "amazon_seattle.png",
         layers: [
@@ -25,6 +26,7 @@ export async function getExperiences(): Promise<Experience[]> {
       role: "Machine Learning Researcher",
       date: "Sep. 2024 - Present",
       description: "Fine-tune foundational EEG Transformer model for real-time seizure detection and discover quantitative biomarkers using EEG and EMG data.",
+      url: "https://neurosciences.ucsd.edu/research/labs/ung/index.html#",
       avatar_state: {
         layers: [
           { image: "brain.png", zIndex: 10, width: 100, height: 100, x: 0, y: 0 },
@@ -36,6 +38,7 @@ export async function getExperiences(): Promise<Experience[]> {
       role: "Quantitative Research Consultant",
       date: "May 2024 - Present",
       description: "Research, implement, and backtest equity trading strategies for potential portfolio integration. National Finalist in International Quant Championship 2024.",
+      url: "https://worldquant.com",
       avatar_state: {
         layers: [
           { image: "suit.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0 },
@@ -48,6 +51,7 @@ export async function getExperiences(): Promise<Experience[]> {
       role: "Teaching Assistant",
       date: "Mar. 2024 - Present",
       description: "Tutor for DSC 20: Programming and Data Structures (Python), DSC 30: Data Structures and Algorithms (Java).",
+      url: "https://datascience.ucsd.edu/",
       avatar_state: {
         background: "geisel.png",
         layers: [
@@ -61,6 +65,7 @@ export async function getExperiences(): Promise<Experience[]> {
       role: "VP of Machine Learning",
       date: "Oct. 2023 - Present",
       description: "Lead machine learning initiatives, achieving 1st place in multiple QuantConnect League competitions.",
+      url: "https://www.tquantt.com",
       avatar_state: {
         background: "geisel.png",
         layers: [
@@ -73,6 +78,7 @@ export async function getExperiences(): Promise<Experience[]> {
       role: "Data Analytics Intern",
       date: "Jun. 2022 - Jul. 2022",
       description: "Analyzed claims data to improve the standard of care for our furry friends.",
+      url: "https://www.petinsurance.com/",
       avatar_state: {
         layers: [
           { image: "nationwide.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0 },

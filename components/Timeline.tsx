@@ -131,7 +131,20 @@ const TimelineItem = forwardRef(function TimelineItem(
           }`}
         >
           <h3 className="text-xl font-bold">{experience.role}</h3>
-          <h4 className="text-lg font-semibold text-primary">{experience.company}</h4>
+          <h4 className="text-lg font-semibold text-primary">
+            {experience.url ? (
+              <a 
+                href={experience.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {experience.company}
+              </a>
+            ) : (
+              experience.company
+            )}
+          </h4>
           <p className="text-sm text-muted-foreground mb-2">{experience.date}</p>
           <p>{experience.description}</p>
         </div>
