@@ -131,7 +131,7 @@ export async function getProjects(): Promise<Project[]> {
         "Designed and implemented a personal portfolio site with Next.js, featuring a custom pixel art avatar that changes based on scroll position.",
       tags: ["Next.js", "TypeScript", "Pixi.js"],
       github: "https://github.com/CarterT27/portfolio",
-      live: "https://cartertran.com",
+      live: null, // unnecessary to self-redirect
       image: "/logos/nextjs.png",
     },
   ]
