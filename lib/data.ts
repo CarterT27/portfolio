@@ -56,8 +56,8 @@ export async function getExperiences(): Promise<Experience[]> {
       avatar_state: {
         background: "geisel.png",
         layers: [
-          { image: "java.png", zIndex: 10, width: 100, height: 100, x: -50, y: 0, bounce: false },
-          { image: "python.png", zIndex: 20, width: 100, height: 100, x: 50, y: 0, bounce: false },
+          { image: "java.png", zIndex: 10, width: 150, height: 150, x: -80, y: 0, bounce: false },
+          { image: "python.png", zIndex: 20, width: 150, height: 150, x: 80, y: 0, bounce: false },
         ],
       },
     },
