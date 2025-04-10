@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import ThemeToggle from "./ThemeToggle";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { id: "header", label: "Home" },
@@ -106,20 +107,30 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`text-sm font-medium transition-colors relative
-                  ${currentSection === item.label
-                    ? "text-primary"
-                    : showNavbar ? "text-foreground hover:text-primary" : "text-foreground/80 hover:text-primary"
-                  }`}
-              >
-                {item.label}
-                {currentSection === item.label && (
-                  <span className="absolute bottom-[-8px] left-0 w-full h-0.5 bg-primary rounded-full"></span>
-                )}
-              </button>
+              <div key={item.id} className="relative">
+                <button
+                  onClick={() => scrollToSection(item.id)}
+                  className={`text-sm font-medium transition-colors
+                    ${currentSection === item.label
+                      ? "text-primary"
+                      : showNavbar ? "text-foreground hover:text-primary" : "text-foreground/80 hover:text-primary"
+                    }`}
+                >
+                  {item.label}
+                </button>
+                
+                <AnimatePresence>
+                  {currentSection === item.label && (
+                    <motion.div 
+                      className="absolute bottom-[-8px] h-0.5 bg-primary rounded-full w-full"
+                      initial={{ scaleX: 0, opacity: 0 }}
+                      animate={{ scaleX: 1, opacity: 1 }}
+                      exit={{ scaleX: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    />
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </div>
 
