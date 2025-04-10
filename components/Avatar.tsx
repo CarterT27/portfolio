@@ -50,14 +50,11 @@ function getBackgroundUrl(background: string | undefined, forcedVariant?: 'day' 
 export default function Avatar() {
   const { avatarState } = useAvatarContext()
   const [bobPosition, setBobPosition] = useState(0)
-  // Initialize with a valid URL based on current state and time
   const [backgroundUrl, setBackgroundUrl] = useState<string>(() =>
     getBackgroundUrl(avatarState.background)
   )
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
-  // For testing time variants
   const [forcedTimeVariant, setForcedTimeVariant] = useState<'day' | 'night' | 'sunrise_sunset' | undefined>(undefined)
-  // For testing bounce property
   const [bounceLayers, setBounceLayers] = useState<Record<number, boolean>>({})
 
   useEffect(() => {
@@ -65,8 +62,15 @@ export default function Avatar() {
     const newUrl = getBackgroundUrl(avatarState.background, forcedTimeVariant);
     setBackgroundUrl(newUrl)
 
-    // Reset fallback when primary URL changes
-    setFallbackUrl(avatarState.background ? `/avatar/${avatarState.background}` : `/avatar/geisel.png`)
+    // Set fallback URLs in order of preference:
+    // 1. Original background without time variant
+    // 2. Default geisel background with time variant
+    // 3. Default geisel background without time variant
+    if (avatarState.background) {
+      setFallbackUrl(`/avatar/${avatarState.background}`);
+    } else {
+      setFallbackUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant)}.png`);
+    }
 
     // Update background URL every minute to check for time changes
     const intervalId = setInterval(() => {
@@ -100,6 +104,12 @@ export default function Avatar() {
   const handleImageError = () => {
     if (fallbackUrl && backgroundUrl !== fallbackUrl) {
       setBackgroundUrl(fallbackUrl);
+    } else if (fallbackUrl === `/avatar/${avatarState.background}`) {
+      // If the original background fails, try the default geisel with time variant
+      setBackgroundUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant)}.png`);
+    } else {
+      // If all else fails, use the basic geisel
+      setBackgroundUrl('/avatar/geisel.png');
     }
   };
 
