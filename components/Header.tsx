@@ -50,15 +50,28 @@ const useTypingEffect = (text: string, speed: number = 100) => {
   return { displayText, isTypingComplete, showCursor, isAnimationComplete };
 };
 
+// Define a type for the seagull object
+type Seagull = {
+  id: string; // Changed to string to support more complex IDs
+  position: number;
+  height: number;
+  currentImage: number;
+  direction: 'ltr' | 'rtl';
+  isFlying: boolean;
+};
+
+// Generate a guaranteed unique ID
+const generateUniqueId = (): string => {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+};
+
 export default function Header() {
   const [showArrow, setShowArrow] = useState(true);
-  const [isSeagullFlying, setIsSeagullFlying] = useState(false);
-  const [seagullPosition, setSeagullPosition] = useState(-50);
-  const [seagullHeight, setSeagullHeight] = useState(5);
-  const [currentSeagullImage, setCurrentSeagullImage] = useState(1);
-  const [flyDirection, setFlyDirection] = useState<'ltr' | 'rtl'>('ltr'); // left-to-right or right-to-left
-  const animationRef = useRef<number | null>(null);
+  const [seagulls, setSeagulls] = useState<Seagull[]>([]);
+  const [clickCount, setClickCount] = useState(0);
+  const [isPopped, setIsPopped] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
+  const animationFrameIds = useRef<Map<string, number>>(new Map());
   const { displayText, isTypingComplete, showCursor, isAnimationComplete } = useTypingEffect("Carter Tran", 150);
 
   useEffect(() => {
@@ -78,84 +91,132 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    if (isSeagullFlying) {
-      let lastTime = performance.now();
-      const flySpeed = 4; // pixels per frame
-      const flapInterval = 150; // milliseconds between flaps
-      let lastFlapTime = 0;
+    // Cleanup animation frames when component unmounts
+    return () => {
+      animationFrameIds.current.forEach((id) => {
+        cancelAnimationFrame(id);
+      });
+    };
+  }, []);
 
-      const animate = (time: number) => {
-        const deltaTime = time - lastTime;
-        lastTime = time;
+  const animateSeagull = (seagullId: string, time: number) => {
+    let lastTime = time;
+    const flySpeed = 4; // pixels per frame
+    const flapInterval = 150; // milliseconds between flaps
+    let lastFlapTime = 0;
 
-        // Get hero element bounds
-        const heroElement = heroRef.current;
-        if (!heroElement) {
-          setIsSeagullFlying(false);
-          return;
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+
+      // Get hero element bounds
+      const heroElement = heroRef.current;
+      if (!heroElement) {
+        setSeagulls(prev => prev.filter(s => s.id !== seagullId));
+        animationFrameIds.current.delete(seagullId);
+        return;
+      }
+
+      const heroRect = heroElement.getBoundingClientRect();
+      const heroWidth = heroRect.width;
+
+      setSeagulls(prev => {
+        const seagull = prev.find(s => s.id === seagullId);
+        if (!seagull || !seagull.isFlying) {
+          // If seagull doesn't exist anymore, stop animation
+          animationFrameIds.current.delete(seagullId);
+          return prev;
         }
-
-        const heroRect = heroElement.getBoundingClientRect();
-        const heroWidth = heroRect.width;
 
         // Move seagull based on direction
-        setSeagullPosition(prev => {
-          // Calculate new position based on direction
-          const newPosition = flyDirection === 'ltr'
-            ? prev + flySpeed  // Moving right
-            : prev - flySpeed; // Moving left
+        const newPosition = seagull.direction === 'ltr'
+          ? seagull.position + flySpeed  // Moving right
+          : seagull.position - flySpeed; // Moving left
 
-          // Check if animation should stop based on direction
-          if ((flyDirection === 'ltr' && newPosition > heroWidth) ||
-            (flyDirection === 'rtl' && newPosition < -50)) {
-            setIsSeagullFlying(false);
-            cancelAnimationFrame(animationRef.current as number);
-            return flyDirection === 'ltr' ? -50 : heroWidth + 50; // Reset position for next time
-          }
-          return newPosition;
-        });
-
-        // Flap wings
-        if (time - lastFlapTime > flapInterval) {
-          setCurrentSeagullImage(prev => prev === 1 ? 2 : 1);
-          lastFlapTime = time;
+        // Check if animation should stop based on direction
+        if ((seagull.direction === 'ltr' && newPosition > heroWidth) ||
+            (seagull.direction === 'rtl' && newPosition < -50)) {
+          // Remove this seagull from the array
+          animationFrameIds.current.delete(seagullId);
+          return prev.filter(s => s.id !== seagullId);
         }
 
-        // Continue animation only if still flying
-        if (isSeagullFlying) {
-          animationRef.current = requestAnimationFrame(animate);
+        // Flap wings if it's time
+        let newImage = seagull.currentImage;
+        if (currentTime - lastFlapTime > flapInterval) {
+          newImage = seagull.currentImage === 1 ? 2 : 1;
+          lastFlapTime = currentTime;
         }
-      };
 
-      animationRef.current = requestAnimationFrame(animate);
+        // Update this seagull in the array
+        return prev.map(s => s.id === seagullId ? {
+          ...s,
+          position: newPosition,
+          currentImage: newImage
+        } : s);
+      });
 
-      return () => {
-        if (animationRef.current) {
-          cancelAnimationFrame(animationRef.current);
-        }
-      };
-    }
-  }, [isSeagullFlying, flyDirection]);
+      // Continue animation only if this specific ID is still in the map
+      if (animationFrameIds.current.has(seagullId)) {
+        const frameId = requestAnimationFrame(animate);
+        animationFrameIds.current.set(seagullId, frameId);
+      }
+    };
 
-  const handleSeagullClick = () => {
+    const frameId = requestAnimationFrame(animate);
+    animationFrameIds.current.set(seagullId, frameId);
+  };
+
+  const spawnNewSeagull = () => {
     // Generate random height between 5% and 20%
     const randomHeight = Math.floor(Math.random() * 16) + 5;
-    setSeagullHeight(randomHeight);
-
+    
     // Randomly choose direction
     const randomDirection = Math.random() > 0.5 ? 'ltr' : 'rtl';
-    setFlyDirection(randomDirection);
-
+    
     // Set initial position based on direction
+    let initialPosition;
     if (randomDirection === 'ltr') {
-      setSeagullPosition(-50); // Start from left
+      initialPosition = -50; // Start from left
     } else {
       // Get hero width for right-to-left positioning
       const heroWidth = heroRef.current?.getBoundingClientRect().width || 300;
-      setSeagullPosition(heroWidth + 50); // Start from right
+      initialPosition = heroWidth + 50; // Start from right
     }
 
-    setIsSeagullFlying(true);
+    // Generate a completely unique ID using timestamp and random string
+    const seagullId = generateUniqueId();
+
+    const newSeagull: Seagull = {
+      id: seagullId,
+      position: initialPosition,
+      height: randomHeight,
+      currentImage: 1,
+      direction: randomDirection,
+      isFlying: true
+    };
+
+    // Add new seagull to state and start animation
+    setSeagulls(prev => [...prev, newSeagull]);
+    animateSeagull(seagullId, performance.now());
+  };
+
+  const handleHeroClick = (e: React.MouseEvent) => {
+    if (isPopped) return;
+    
+    // Get the new count directly
+    const newCount = clickCount + 1;
+    
+    // Update the click count
+    setClickCount(newCount);
+    
+    // Handle logic based on count
+    if (newCount >= 5) {
+      setIsPopped(true);
+    } else {
+      // Only spawn a new seagull if we haven't reached 5 clicks yet
+      spawnNewSeagull();
+    }
   };
 
   return (
@@ -175,28 +236,33 @@ export default function Header() {
 
         <div
           ref={heroRef}
-          className="relative hidden lg:block min-w-[256px] max-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden"
+          className={`relative hidden lg:block min-w-[256px] max-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden ${
+            isPopped ? 'hidden' : ''
+          }`}
         >
-          {/* Only show seagull when it's flying */}
-          {isSeagullFlying && (
+          {/* Render all active seagulls */}
+          {seagulls.map((seagull) => (
             <img
-              src={`/avatar/seagull_flap${currentSeagullImage}.png`}
+              key={seagull.id}
+              src={`/avatar/seagull_flap${seagull.currentImage}.png`}
               alt="Seagull"
               className="absolute w-16 h-16 object-contain z-20"
               style={{
-                top: `${seagullHeight}%`,
-                left: `${seagullPosition}px`,
-                transform: `translateY(-50%) scaleX(${flyDirection === 'rtl' ? -1 : 1})`, // Flip image for rtl
-                pointerEvents: 'none' // Prevent seagull from interfering with clicks
+                top: `${seagull.height}%`,
+                left: `${seagull.position}px`,
+                transform: `translateY(-50%) scaleX(${seagull.direction === 'rtl' ? -1 : 1})`,
+                pointerEvents: 'none'
               }}
             />
-          )}
+          ))}
 
           <img
             src="/hero.png"
             alt="Carter Tran"
-            className="rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain cursor-pointer"
-            onClick={handleSeagullClick}
+            className={`rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain cursor-pointer transition-transform duration-300 ${
+              isPopped ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+            }`}
+            onClick={handleHeroClick}
             title="Click for a surprise"
           />
         </div>
