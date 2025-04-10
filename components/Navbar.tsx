@@ -17,6 +17,7 @@ export default function Navbar() {
   const [showNavbar, setShowNavbar] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState("Home");
+  const [isManualNavigation, setIsManualNavigation] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +29,9 @@ export default function Navbar() {
       } else {
         setShowNavbar(false);
       }
+
+      // Skip section detection if user just clicked a navigation item
+      if (isManualNavigation) return;
 
       // Update current section based on scroll position
       const sections = navItems.map(item => ({
@@ -49,30 +53,43 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isManualNavigation]);
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
+      // Immediately update current section based on clicked item
+      const navItem = navItems.find(item => item.id === sectionId);
+      if (navItem) {
+        setCurrentSection(navItem.label);
+      }
+
+      // Set flag to ignore scroll detection temporarily
+      setIsManualNavigation(true);
+
       const navbarHeight = document.querySelector('nav')?.clientHeight || 0;
       const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset;
-      
+
       window.scrollTo({
         top: sectionPosition - navbarHeight,
         behavior: 'smooth'
       });
-      
+
+      // Reset the flag after the scroll animation is likely complete
+      setTimeout(() => {
+        setIsManualNavigation(false);
+      }, 2000);
+
       setIsDropdownOpen(false);
     }
   };
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        showNavbar
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${showNavbar
           ? "bg-background/80 backdrop-blur-sm shadow-md py-4"
           : "bg-transparent py-6"
-      }`}
+        }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
@@ -85,9 +102,8 @@ export default function Navbar() {
               <span className="text-primary font-semibold">{currentSection}</span>
               <FontAwesomeIcon
                 icon={faChevronDown}
-                className={`transition-transform duration-200 ${
-                  isDropdownOpen ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""
+                  }`}
               />
             </button>
             {isDropdownOpen && (
@@ -98,7 +114,7 @@ export default function Navbar() {
                       key={item.id}
                       onClick={() => scrollToSection(item.id)}
                       className={`w-full text-left px-4 py-2 text-sm 
-                        ${currentSection === item.label 
+                        ${currentSection === item.label
                           ? "bg-primary/10 text-primary font-semibold"
                           : "text-foreground hover:bg-primary/5"
                         }`}
@@ -128,7 +144,7 @@ export default function Navbar() {
 
                 <AnimatePresence>
                   {currentSection === item.label && (
-                    <motion.div 
+                    <motion.div
                       className="absolute bottom-[-8px] h-0.5 bg-primary rounded-full w-full"
                       initial={{ scaleX: 0, opacity: 0 }}
                       animate={{ scaleX: 1, opacity: 1 }}
