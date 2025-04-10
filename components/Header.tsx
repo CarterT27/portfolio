@@ -50,6 +50,54 @@ const useTypingEffect = (text: string, speed: number = 100) => {
   return { displayText, isTypingComplete, showCursor, isAnimationComplete };
 };
 
+// Custom hook for cycling through blurbs with typing/deleting effects
+const useBlurbCycler = (blurbs: string[], shouldStart: boolean, typingSpeed: number = 50, deletingSpeed: number = 30, pauseDuration: number = 3000) => {
+  const [displayText, setDisplayText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    // Only start animation if shouldStart is true
+    if (!shouldStart) return;
+
+    let timer: NodeJS.Timeout;
+
+    if (isDeleting) {
+      // Deleting phase
+      if (displayText.length === 0) {
+        // When fully deleted, move to the next blurb and start typing
+        const nextIndex = (currentIndex + 1) % blurbs.length;
+        setCurrentIndex(nextIndex);
+        setIsDeleting(false);
+      } else {
+        // Continue deleting one character at a time
+        timer = setTimeout(() => {
+          setDisplayText(prev => prev.substring(0, prev.length - 1));
+        }, deletingSpeed);
+      }
+    } else {
+      // Typing phase
+      const fullText = blurbs[currentIndex];
+
+      if (displayText === fullText) {
+        // When fully typed, pause before starting to delete
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, pauseDuration);
+      } else {
+        // Continue typing one character at a time
+        timer = setTimeout(() => {
+          setDisplayText(fullText.substring(0, displayText.length + 1));
+        }, typingSpeed);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [blurbs, currentIndex, displayText, isDeleting, deletingSpeed, typingSpeed, pauseDuration, shouldStart]);
+
+  return { displayText, currentBlurb: blurbs[currentIndex], currentIndex, isDeleting };
+};
+
 // Define a type for the seagull object
 type Seagull = {
   id: string; // Changed to string to support more complex IDs
@@ -72,8 +120,18 @@ export default function Header() {
   const [isPopped, setIsPopped] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const animationFrameIds = useRef<Map<string, number>>(new Map());
-  const { displayText, isTypingComplete, showCursor, isAnimationComplete } = useTypingEffect("Carter Tran", 150);
-  
+  const { displayText: nameText, isTypingComplete: isNameTypingComplete, showCursor: nameShowCursor, isAnimationComplete } = useTypingEffect("Carter Tran", 150);
+
+  // State to track if blurb animation should start
+  const [shouldStartBlurbAnimation, setShouldStartBlurbAnimation] = useState(false);
+
+  // Effect to trigger blurb animation after name animation completes
+  useEffect(() => {
+    if (isAnimationComplete) {
+      setShouldStartBlurbAnimation(true);
+    }
+  }, [isAnimationComplete]);
+
   // Array of possible blurbs
   const blurbs = [
     "Tinkerer, builder, problem solver",
@@ -83,15 +141,12 @@ export default function Header() {
     "Problem solver, builder, tinkerer",
     "Problem solver, tinkerer, builder",
   ];
-  
-  // State to hold the randomly selected blurb
-  const [currentBlurb, setCurrentBlurb] = useState("");
-  
-  // Select a random blurb on component mount
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * blurbs.length);
-    setCurrentBlurb(blurbs[randomIndex]);
-  }, []);
+
+  // Use the blurb cycler hook with the shouldStart condition
+  const { displayText: blurbText } = useBlurbCycler(blurbs, shouldStartBlurbAnimation, 50, 30, 3000);
+
+  // Find the longest blurb for sizing
+  const longestBlurb = blurbs.reduce((a, b) => a.length > b.length ? a : b, "");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -154,7 +209,7 @@ export default function Header() {
 
         // Check if animation should stop based on direction
         if ((seagull.direction === 'ltr' && newPosition > heroWidth) ||
-            (seagull.direction === 'rtl' && newPosition < -50)) {
+          (seagull.direction === 'rtl' && newPosition < -50)) {
           // Remove this seagull from the array
           animationFrameIds.current.delete(seagullId);
           return prev.filter(s => s.id !== seagullId);
@@ -189,10 +244,10 @@ export default function Header() {
   const spawnNewSeagull = () => {
     // Generate random height between 5% and 20%
     const randomHeight = Math.floor(Math.random() * 16) + 5;
-    
+
     // Randomly choose direction
     const randomDirection = Math.random() > 0.5 ? 'ltr' : 'rtl';
-    
+
     // Set initial position based on direction
     let initialPosition;
     if (randomDirection === 'ltr') {
@@ -222,20 +277,20 @@ export default function Header() {
 
   const handleHeroClick = (e: React.MouseEvent) => {
     if (isPopped) return;
-    
+
     // Get the new count directly
     const newCount = clickCount + 1;
-    
+
     // Update the click count
     setClickCount(newCount);
-    
+
     // Handle logic based on count
     // Temporarily disable popping effect
     // if (newCount >= 5) {
     //   setIsPopped(true);
     // } else {
-      // Spawn a new seagull on every click (no limit)
-      spawnNewSeagull();
+    // Spawn a new seagull on every click (no limit)
+    spawnNewSeagull();
     // }
   };
 
@@ -245,20 +300,24 @@ export default function Header() {
         <div className="text-center lg:text-left max-w-2xl">
           <h1 className="text-6xl md:text-7xl font-bold mb-6 font-['Rokiest'] tracking-wider">
             <span className="inline-block min-w-[300px] sm:min-w-[350px] md:min-w-[400px] lg:min-w-[500px] text-left">
-              {displayText}
-              {showCursor && <span className="animate-pulse">|</span>}
+              {nameText}
+              {nameShowCursor && <span className="animate-pulse">|</span>}
             </span>
           </h1>
-          <p className="text-xl md:text-2xl mx-auto text-muted-foreground mb-12">
-            {currentBlurb}
+          <p className="text-xl md:text-2xl mx-auto text-muted-foreground mb-12 h-[1.5em] relative">
+            <span className="absolute opacity-0 select-none" aria-hidden="true">
+              {longestBlurb}
+            </span>
+            <span className="absolute">
+              {blurbText}{shouldStartBlurbAnimation && <span className="animate-pulse">|</span>}
+            </span>
           </p>
         </div>
 
         <div
           ref={heroRef}
-          className={`relative hidden lg:block min-w-[256px] max-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden ${
-            isPopped ? 'hidden' : ''
-          }`}
+          className={`relative hidden lg:block min-w-[256px] max-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden ${isPopped ? 'hidden' : ''
+            }`}
         >
           {/* Render all active seagulls */}
           {seagulls.map((seagull) => (
@@ -279,9 +338,8 @@ export default function Header() {
           <img
             src="/hero.png"
             alt="Carter Tran"
-            className={`rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain cursor-pointer transition-transform duration-300 ${
-              isPopped ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
-            }`}
+            className={`rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain cursor-pointer transition-transform duration-300 ${isPopped ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+              }`}
             onClick={handleHeroClick}
             title="Click for a surprise"
           />
