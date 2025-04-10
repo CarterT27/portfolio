@@ -47,6 +47,7 @@ function ThemeAwareImage({ src, alt, className, scale }: { src: string; alt: str
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
+  const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -70,18 +71,33 @@ export default function Projects() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {projects.map((project, index) => (
-        <ProjectCard key={index} project={project} index={index} />
+        <ProjectCard 
+          key={index} 
+          project={project} 
+          index={index} 
+          isExpanded={expandedCardIndex === index}
+          setExpandedCardIndex={setExpandedCardIndex}
+        />
       ))}
     </div>
   )
 }
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ 
+  project, 
+  index, 
+  isExpanded, 
+  setExpandedCardIndex 
+}: { 
+  project: Project; 
+  index: number; 
+  isExpanded: boolean; 
+  setExpandedCardIndex: (index: number | null) => void;
+}) {
   const [isHovered, setIsHovered] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleInteraction = () => {
-    setIsExpanded(!isExpanded);
+    setExpandedCardIndex(isExpanded ? null : index);
   };
 
   return (
