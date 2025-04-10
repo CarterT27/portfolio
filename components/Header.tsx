@@ -211,12 +211,13 @@ export default function Header() {
     setClickCount(newCount);
     
     // Handle logic based on count
-    if (newCount >= 5) {
-      setIsPopped(true);
-    } else {
-      // Only spawn a new seagull if we haven't reached 5 clicks yet
+    // Temporarily disable popping effect
+    // if (newCount >= 5) {
+    //   setIsPopped(true);
+    // } else {
+      // Spawn a new seagull on every click (no limit)
       spawnNewSeagull();
-    }
+    // }
   };
 
   return (
