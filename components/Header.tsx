@@ -55,10 +55,19 @@ const useBlurbCycler = (blurbs: string[], shouldStart: boolean, typingSpeed: num
   const [displayText, setDisplayText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
 
+  // Initialize animation when shouldStart becomes true
   useEffect(() => {
-    // Only start animation if shouldStart is true
-    if (!shouldStart) return;
+    if (shouldStart && !isRunning) {
+      setIsRunning(true);
+    }
+  }, [shouldStart, isRunning]);
+
+  // Main animation effect, depends on isRunning instead of shouldStart
+  useEffect(() => {
+    // Only start animation if isRunning is true
+    if (!isRunning) return;
 
     let timer: NodeJS.Timeout;
 
@@ -93,7 +102,7 @@ const useBlurbCycler = (blurbs: string[], shouldStart: boolean, typingSpeed: num
     }
 
     return () => clearTimeout(timer);
-  }, [blurbs, currentIndex, displayText, isDeleting, deletingSpeed, typingSpeed, pauseDuration, shouldStart]);
+  }, [blurbs, currentIndex, displayText, isDeleting, deletingSpeed, typingSpeed, pauseDuration, isRunning]);
 
   return { displayText, currentBlurb: blurbs[currentIndex], currentIndex, isDeleting };
 };
@@ -140,13 +149,16 @@ export default function Header() {
     "Building scalable and performant software solutions",
     "Cars, code, and culinary adventures",
     "On the lookout for the next big thing"
-];
+  ];
+
+  // Memoize the blurb array to prevent unnecessary rerenders
+  const memoizedBlurbs = useRef(blurbs).current;
 
   // Use the blurb cycler hook with the shouldStart condition
-  const { displayText: blurbText } = useBlurbCycler(blurbs, shouldStartBlurbAnimation, 50, 30, 3000);
+  const { displayText: blurbText } = useBlurbCycler(memoizedBlurbs, shouldStartBlurbAnimation, 50, 30, 3000);
 
   // Find the longest blurb for sizing
-  const longestBlurb = blurbs.reduce((a, b) => a.length > b.length ? a : b, "");
+  const longestBlurb = memoizedBlurbs.reduce((a, b) => a.length > b.length ? a : b, "");
 
   useEffect(() => {
     const handleScroll = () => {
