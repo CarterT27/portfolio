@@ -73,6 +73,25 @@ export default function Header() {
   const heroRef = useRef<HTMLDivElement>(null);
   const animationFrameIds = useRef<Map<string, number>>(new Map());
   const { displayText, isTypingComplete, showCursor, isAnimationComplete } = useTypingEffect("Carter Tran", 150);
+  
+  // Array of possible blurbs
+  const blurbs = [
+    "Tinkerer, builder, problem solver",
+    "Tinkerer, problem solver, builder",
+    "Builder, tinkerer, problem solver",
+    "Builder, problem solver, tinkerer",
+    "Problem solver, builder, tinkerer",
+    "Problem solver, tinkerer, builder",
+  ];
+  
+  // State to hold the randomly selected blurb
+  const [currentBlurb, setCurrentBlurb] = useState("");
+  
+  // Select a random blurb on component mount
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * blurbs.length);
+    setCurrentBlurb(blurbs[randomIndex]);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -231,7 +250,7 @@ export default function Header() {
             </span>
           </h1>
           <p className="text-xl md:text-2xl mx-auto text-muted-foreground mb-12">
-            Tinkerer, builder, problem solver
+            {currentBlurb}
           </p>
         </div>
 
