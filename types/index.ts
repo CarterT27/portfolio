@@ -5,6 +5,7 @@ export interface AvatarLayer {
   height?: number;
   x?: number;
   y?: number;
+  bounce?: boolean; // Whether this layer should have a bouncing animation
 }
 
 export interface AvatarState {

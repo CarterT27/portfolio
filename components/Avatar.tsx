@@ -57,6 +57,8 @@ export default function Avatar() {
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
   // For testing time variants
   const [forcedTimeVariant, setForcedTimeVariant] = useState<'day' | 'night' | 'sunrise_sunset' | undefined>(undefined)
+  // For testing bounce property
+  const [bounceLayers, setBounceLayers] = useState<Record<number, boolean>>({})
 
   useEffect(() => {
     // Update background URL when avatarState changes
@@ -110,6 +112,14 @@ export default function Avatar() {
     }
   };
 
+  // Toggle bounce for a specific layer
+  const toggleBounceForLayer = (index: number) => {
+    setBounceLayers(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }))
+  }
+
   return (
     <motion.div
       className="relative w-full h-full flex items-center justify-center"
@@ -131,34 +141,36 @@ export default function Avatar() {
         </div>
 
         {/* Character Layers - positioned with transform to allow for the bobbing animation */}
-        <div
-          className="absolute inset-0 z-10 flex items-center justify-center"
-          style={{ transform: `translateY(${bobPosition}px)` }}
-        >
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
           {/* Render all avatar layers sorted by zIndex */}
           {avatarState.layers
             .slice()
             .sort((a, b) => a.zIndex - b.zIndex)
-            .map((layer, index) => (
-              <div
-                key={`layer-${index}`}
-                className="absolute"
-                style={{
-                  left: '50%',
-                  top: '50%',
-                  transform: `translate(-50%, -50%) translate(${layer.x}px, ${layer.y}px)`
-                }}
-              >
-                <Image
-                  src={`/avatar/${layer.image}`}
-                  alt=""
-                  width={layer.width}
-                  height={layer.height}
-                  className="pixelated"
-                  priority
-                />
-              </div>
-            ))}
+            .map((layer, index) => {
+              // Use the bounce property from the layer, or override with the debug toggle if available
+              const shouldBounce = bounceLayers[index] !== undefined ? bounceLayers[index] : layer.bounce
+              
+              return (
+                <div
+                  key={`layer-${index}`}
+                  className="absolute"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    transform: `translate(-50%, -50%) translate(${layer.x}px, ${layer.y}px)${shouldBounce ? ` translateY(${bobPosition}px)` : ''}`
+                  }}
+                >
+                  <Image
+                    src={`/avatar/${layer.image}`}
+                    alt=""
+                    width={layer.width}
+                    height={layer.height}
+                    className="pixelated"
+                    priority
+                  />
+                </div>
+              )
+            })}
         </div>
 
         {/* Debug info showing current avatar state - positioned at the bottom */}
@@ -195,6 +207,29 @@ export default function Avatar() {
               >
                 Auto
               </button>
+            </div>
+
+            {/* Bounce toggle controls */}
+            <div className="mt-2">
+              <p className="text-xs font-semibold mb-1">Layer Bounce Toggles:</p>
+              <div className="flex flex-wrap justify-center gap-1">
+                {avatarState.layers
+                  .slice()
+                  .sort((a, b) => a.zIndex - b.zIndex)
+                  .map((layer, index) => (
+                    <button
+                      key={`bounce-toggle-${index}`}
+                      onClick={() => toggleBounceForLayer(index)}
+                      className={`px-2 py-1 rounded text-xs ${
+                        (bounceLayers[index] !== undefined ? bounceLayers[index] : layer.bounce) 
+                          ? 'bg-primary text-primary-foreground' 
+                          : 'bg-muted'
+                      }`}
+                    >
+                      {layer.image.split('.')[0]} ({index})
+                    </button>
+                  ))}
+              </div>
             </div>
           </div>
         )}

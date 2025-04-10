@@ -17,7 +17,8 @@ export async function getExperiences(): Promise<Experience[]> {
       avatar_state: {
         background: "amazon_seattle.png",
         layers: [
-          { image: "amazon.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0 },
+          { image: "amazon.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0, bounce: false },
+          { image: "rocket.png", zIndex: 20, width: 80, height: 80, x: 100, y: -100, bounce: true },
         ],
       },
     },
@@ -29,7 +30,7 @@ export async function getExperiences(): Promise<Experience[]> {
       url: "https://neurosciences.ucsd.edu/research/labs/ung/index.html#",
       avatar_state: {
         layers: [
-          { image: "brain.png", zIndex: 10, width: 100, height: 100, x: 0, y: 0 },
+          { image: "brain.png", zIndex: 10, width: 100, height: 100, x: 0, y: 0, bounce: false },
         ],
       },
     },
@@ -41,8 +42,8 @@ export async function getExperiences(): Promise<Experience[]> {
       url: "https://worldquant.com",
       avatar_state: {
         layers: [
-          { image: "suit.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0 },
-          { image: "candlesticks.png", zIndex: 20, width: 80, height: 80, x: 0, y: 0 },
+          // { image: "suit.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0, bounce: false },
+          { image: "candlesticks.png", zIndex: 10, width: 80, height: 80, x: 0, y: 0, bounce: false },
         ],
       },
     },
@@ -55,8 +56,8 @@ export async function getExperiences(): Promise<Experience[]> {
       avatar_state: {
         background: "geisel.png",
         layers: [
-          { image: "java.png", zIndex: 10, width: 100, height: 100, x: -50, y: 0 },
-          { image: "python.png", zIndex: 20, width: 100, height: 100, x: 50, y: 0 },
+          { image: "java.png", zIndex: 10, width: 100, height: 100, x: -50, y: 0, bounce: false },
+          { image: "python.png", zIndex: 20, width: 100, height: 100, x: 50, y: 0, bounce: false },
         ],
       },
     },
@@ -69,7 +70,7 @@ export async function getExperiences(): Promise<Experience[]> {
       avatar_state: {
         background: "geisel.png",
         layers: [
-          { image: "candlesticks.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0 },
+          { image: "candlesticks.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0, bounce: false },
         ],
       },
     },
@@ -81,8 +82,8 @@ export async function getExperiences(): Promise<Experience[]> {
       url: "https://www.petinsurance.com/",
       avatar_state: {
         layers: [
-          { image: "nationwide.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0 },
-          { image: "dog.png", zIndex: 20, width: 100, height: 100, x: 70, y: 50 },
+          { image: "nationwide.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0, bounce: false },
+          { image: "dog.png", zIndex: 20, width: 100, height: 100, x: 70, y: 50, bounce: true },
         ],
       },
     },
