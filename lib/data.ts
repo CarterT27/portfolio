@@ -81,6 +81,7 @@ export async function getExperiences(): Promise<Experience[]> {
       description: "Analyzed claims data to improve the standard of care for our furry friends.",
       url: "https://www.petinsurance.com/",
       avatar_state: {
+        background: "basis.png",
         layers: [
           { image: "nationwide.png", zIndex: 10, width: 192, height: 192, x: 0, y: 0, bounce: false },
           { image: "dog.png", zIndex: 20, width: 100, height: 100, x: 70, y: 50, bounce: true },
