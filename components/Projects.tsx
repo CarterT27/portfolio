@@ -22,7 +22,7 @@ function ThemeAwareImage({ src, alt, className, scale }: { src: string; alt: str
   }, [])
 
   // Apply scaling if provided
-  const scaleStyle = scale ? { transform: `scale(${scale})` } : undefined;
+  const scaleStyle = scale ? { transform: `scale(${scale})`, maxWidth: '100%', maxHeight: '100%' } : { maxWidth: '100%', maxHeight: '100%' };
 
   if (!mounted) return <img src={src} alt={alt} className={className} style={scaleStyle} />;
 
@@ -39,6 +39,11 @@ function ThemeAwareImage({ src, alt, className, scale }: { src: string; alt: str
     if (src === '/logos/txtTutor.svg') {
       return <img src="/logos/txtTutor-white.svg" alt={alt} className={className} style={scaleStyle} />;
     }
+  }
+
+  // Dark theme: use original applehealth logo, Light theme: use dark variant
+  if (src === '/logos/applehealth.png') {
+    return <img src={isDarkTheme ? src : "/logos/applehealth-dark.png"} alt={alt} className={className} style={scaleStyle} />;
   }
 
   return <img src={src} alt={alt} className={className} style={scaleStyle} />;
@@ -123,11 +128,11 @@ function ProjectCard({
         </CardHeader>
 
         <CardContent className="p-4 pt-0">
-          <div className="w-full h-40 flex items-center justify-center overflow-hidden rounded-md mb-4">
+          <div className="w-full h-40 flex items-center justify-center overflow-hidden rounded-md mb-4 relative">
             <ThemeAwareImage
               src={project.image || "/logos/nextjs.png"}
               alt={project.title}
-              className="object-contain"
+              className="object-contain max-h-full"
               scale={project.imageScale}
             />
           </div>
