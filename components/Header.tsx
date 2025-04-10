@@ -35,9 +35,9 @@ export default function Header() {
         </div>
         <div className="hidden lg:block min-w-[256px]">
           <img
-            src="/headshot.png"
+            src="/hero.png"
             alt="Carter Tran"
-            className="rounded-lg w-64 h-64 object-cover"
+            className="rounded-lg w-256 h-256 object-cover"
           />
         </div>
       </div>
