@@ -18,6 +18,7 @@ export default function Home() {
         <section id="experience" className="py-16 relative">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-7">
+              <h2 className="text-3xl font-bold mb-8 text-center">Experience</h2>
               <Timeline />
             </div>
             <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-[20vh] lg:h-[min(100%,400px)]">
@@ -27,7 +28,7 @@ export default function Home() {
         </section>
 
         <section id="projects" className="py-16">
-          <h2 className="text-3xl font-bold mb-8">Projects</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Projects</h2>
           <Projects />
         </section>
 
