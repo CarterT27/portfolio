@@ -78,13 +78,18 @@ export default function Projects() {
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleInteraction = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      whileHover={{ 
+      whileHover={{
         y: -5,
         boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
         scale: 1.02,
@@ -93,6 +98,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       className="h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleInteraction}
     >
       <Card className="h-full transition-all duration-300">
         <CardHeader className="p-4">
@@ -112,9 +118,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ 
-              opacity: isHovered ? 1 : 0,
-              height: isHovered ? "auto" : 0
+            animate={{
+              opacity: isHovered || isExpanded ? 1 : 0,
+              height: isHovered || isExpanded ? "auto" : 0
             }}
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
@@ -127,13 +133,14 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 </span>
               ))}
             </div>
-            
+
             <div className="flex gap-2 mt-4">
               {project.github && (
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={(e) => {
+                    e.stopPropagation();
                     if (project.github) {
                       window.open(project.github, "_blank")
                     }
@@ -149,6 +156,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   variant="default"
                   size="sm"
                   onClick={(e) => {
+                    e.stopPropagation();
                     if (project.live) {
                       window.open(project.live, "_blank")
                     }
