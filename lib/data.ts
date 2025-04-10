@@ -116,6 +116,26 @@ export async function getProjects(): Promise<Project[]> {
       image: "/logos/atptour.png",
     },
     {
+      title: "Social Media Question-Answering",
+      summary: "Search and question-answering system for social media content",
+      description:
+        "Engineered database of social media content across Twitter and Youtube, enabling advanced search and question-answering. Implemented transcription with OpenAI Whisper and topic modeling with BERTopic to extract key themes across influencers. Created an interactive graph of thematic relationships between content using D3.js.",
+      tags: ["Large Language Models", "Topic Modeling", "Question-Answering", "D3.js"],
+      github: null,
+      live: null,
+      image: "/logos/obsidian.png",
+    },
+    {
+      title: "FASTER",
+      summary: "Feature Automation, Selection, Transformation, Extraction Routine",
+      description:
+        "Automated an ETL pipeline with OpenRouter API for integrating LLM domain knowledge into the AutoML paradigm. Validated performance of generated features using XGBoost and scikit-learn models across 3 benchmark datasets.",
+      tags: ["Python", "Large Language Models", "AutoML", "ETL"],
+      github: null,
+      live: null,
+      image: "/logos/automl.png",
+    },
+    {
       title: "txtTutor",
       summary: "Document question-answering application with LLM integration",
       description:
@@ -125,6 +145,16 @@ export async function getProjects(): Promise<Project[]> {
       live: null,
       image: "/logos/txtTutor.svg",
       imageScale: 1,
+    },
+    {
+      title: "AI Health Insights",
+      summary: "Health data analysis and insight generation platform",
+      description:
+        "Utilized dask to process and analyze millions of rows of Apple Watch health data, identifying key underperforming metrics. Developed health insight generation pipelines leveraging Claude and fine-tuned HuggingFace Large Language Models. Developed an interactive dashboard using plotly/dash to visualize trends, insights, and actionable recommendations. Hosted web server using Cloudflare tunnels.",
+      tags: ["Python", "Natural Language Processing", "Big Data", "Dask", "Plotly"],
+      github: "https://github.com/CarterT27/Apple-Watch-Personalized-Health-Insights",
+      live: null,
+      image: "/logos/applehealth.png",
     },
     {
       title: "Personal Portfolio",
