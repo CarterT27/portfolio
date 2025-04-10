@@ -3,17 +3,14 @@ import Timeline from "@/components/Timeline"
 import Avatar from "@/components/Avatar"
 import Projects from "@/components/Projects"
 import Footer from "@/components/Footer"
-import ThemeToggle from "@/components/ThemeToggle"
 import ContactForm from "@/components/ContactForm"
+import Navbar from "@/components/Navbar"
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <div className="fixed top-4 right-4 z-50">
-          <ThemeToggle />
-        </div>
-
         <section id="header" className="min-h-screen flex items-center justify-center">
           <Header />
         </section>

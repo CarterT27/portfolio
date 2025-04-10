@@ -16,14 +16,15 @@ export default function ThemeToggle() {
   if (!mounted) return null
 
   return (
-    <div className="wrapper">
+    <div className="wrapper h-8 scale-75 origin-center">
       <input 
         type="checkbox"
         id="theme-toggle"
         checked={resolvedTheme === "dark"}
         onChange={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+        className="h-8"
       />
-      <label htmlFor="theme-toggle" className="toggle">
+      <label htmlFor="theme-toggle" className="toggle h-8">
         <span className="toggle-button">
           <span className="crater crater-1"></span>
           <span className="crater crater-2"></span>
