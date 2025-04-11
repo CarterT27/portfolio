@@ -91,7 +91,7 @@ export default function Navbar() {
           : "bg-transparent py-6"
         }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto px-6 md:px-8 lg:px-16">
         <div className="flex items-center justify-between">
           {/* Mobile Dropdown */}
           <div className="relative md:hidden">
