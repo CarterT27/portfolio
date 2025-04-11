@@ -4,9 +4,13 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { useAvatarContext } from "@/context/AvatarContext"
 import Image from "next/image"
+import { useTheme } from "next-themes"
 
 // Determine the time of day variant to use
-function getTimeVariant(forcedVariant?: 'day' | 'night' | 'sunrise_sunset'): 'day' | 'night' | 'sunrise_sunset' {
+function getTimeVariant(
+  forcedVariant?: 'day' | 'night' | 'sunrise_sunset',
+  theme?: string | undefined
+): 'day' | 'night' | 'sunrise_sunset' {
   // If a variant is forced (for testing), use it
   if (forcedVariant) {
     return forcedVariant;
@@ -17,16 +21,28 @@ function getTimeVariant(forcedVariant?: 'day' | 'night' | 'sunrise_sunset'): 'da
   // Sunrise: 5-8 AM, Sunset: 5-8 PM
   if ((hour >= 5 && hour < 8) || (hour >= 17 && hour < 20)) {
     return 'sunrise_sunset';
+  } else if (theme === 'light') {
+    // Always use day background for light theme (except during sunrise/sunset)
+    return 'day';
+  } else if (theme === 'dark') {
+    // Always use night background for dark theme (except during sunrise/sunset)
+    return 'night';
   } else if (hour >= 8 && hour < 17) {
+    // Fallback to time-based for system theme or when theme is not available
     return 'day';
   } else {
+    // Fallback to time-based for system theme or when theme is not available
     return 'night';
   }
 }
 
 // Get the appropriate background image URL
-function getBackgroundUrl(background: string | undefined, forcedVariant?: 'day' | 'night' | 'sunrise_sunset'): string {
-  const timeVariant = getTimeVariant(forcedVariant);
+function getBackgroundUrl(
+  background: string | undefined, 
+  forcedVariant?: 'day' | 'night' | 'sunrise_sunset',
+  theme?: string
+): string {
+  const timeVariant = getTimeVariant(forcedVariant, theme);
 
   if (!background) {
     // Default background with time variant
@@ -49,17 +65,26 @@ function getBackgroundUrl(background: string | undefined, forcedVariant?: 'day' 
 
 export default function Avatar() {
   const { avatarState } = useAvatarContext()
+  const { resolvedTheme } = useTheme()
   const [bobPosition, setBobPosition] = useState(0)
   const [backgroundUrl, setBackgroundUrl] = useState<string>(() =>
-    getBackgroundUrl(avatarState.background)
+    getBackgroundUrl(avatarState.background, undefined, resolvedTheme)
   )
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
   const [forcedTimeVariant, setForcedTimeVariant] = useState<'day' | 'night' | 'sunrise_sunset' | undefined>(undefined)
   const [bounceLayers, setBounceLayers] = useState<Record<number, boolean>>({})
+  const [mounted, setMounted] = useState(false)
+
+  // Handle theme mounting to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
-    // Update background URL when avatarState changes
-    const newUrl = getBackgroundUrl(avatarState.background, forcedTimeVariant);
+    if (!mounted) return;
+    
+    // Update background URL when avatarState changes or theme changes
+    const newUrl = getBackgroundUrl(avatarState.background, forcedTimeVariant, resolvedTheme);
     setBackgroundUrl(newUrl)
 
     // Set fallback URLs in order of preference:
@@ -69,16 +94,16 @@ export default function Avatar() {
     if (avatarState.background) {
       setFallbackUrl(`/avatar/${avatarState.background}`);
     } else {
-      setFallbackUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant)}.png`);
+      setFallbackUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant, resolvedTheme)}.png`);
     }
 
     // Update background URL every minute to check for time changes
     const intervalId = setInterval(() => {
-      setBackgroundUrl(getBackgroundUrl(avatarState.background, forcedTimeVariant))
+      setBackgroundUrl(getBackgroundUrl(avatarState.background, forcedTimeVariant, resolvedTheme))
     }, 60000) // Check every minute
 
     return () => clearInterval(intervalId)
-  }, [avatarState.background, forcedTimeVariant])
+  }, [avatarState.background, forcedTimeVariant, resolvedTheme, mounted])
 
   // Simple animation effect to replace the Pixi.js animation
   useEffect(() => {
@@ -106,7 +131,7 @@ export default function Avatar() {
       setBackgroundUrl(fallbackUrl);
     } else if (fallbackUrl === `/avatar/${avatarState.background}`) {
       // If the original background fails, try the default geisel with time variant
-      setBackgroundUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant)}.png`);
+      setBackgroundUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant, resolvedTheme)}.png`);
     } else {
       // If all else fails, use the basic geisel
       setBackgroundUrl('/avatar/geisel.png');
@@ -128,6 +153,22 @@ export default function Avatar() {
       ...prev,
       [index]: !prev[index]
     }))
+  }
+
+  // Prevent hydration mismatch by using initial values until mounted
+  if (!mounted) {
+    return (
+      <motion.div
+        className="relative w-full h-full flex items-center justify-center"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="w-[min(100%,400px)] aspect-square bg-card/50 rounded-lg shadow-md border relative overflow-hidden">
+          {/* Loading placeholder */}
+        </div>
+      </motion.div>
+    )
   }
 
   return (
@@ -189,7 +230,8 @@ export default function Avatar() {
             <p>Background: {avatarState.background || 'none'}</p>
             <p>Using: {backgroundUrl.split('/').pop()}</p>
             <p>Layers: {avatarState.layers.length}</p>
-            <p>Time variant: {getTimeVariant(forcedTimeVariant)}</p>
+            <p>Theme: {resolvedTheme || 'loading...'}</p>
+            <p>Time variant: {getTimeVariant(forcedTimeVariant, resolvedTheme)}</p>
 
             {/* Time variant test controls */}
             <div className="mt-2 flex justify-center gap-1">
