@@ -173,6 +173,7 @@ export default function Header() {
   const [isExploding, setIsExploding] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [sampledColors, setSampledColors] = useState<string[]>([]);
+  const [isShaking, setIsShaking] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const pixelContainerRef = useRef<HTMLDivElement>(null);
   const animationFrameIds = useRef<Map<string, number>>(new Map());
@@ -603,6 +604,11 @@ export default function Header() {
   const handleHeroClick = (e: React.MouseEvent) => {
     if (isPopped) return;
 
+    // Trigger shaking effect
+    setIsShaking(true);
+    // Reset shake after animation completes
+    setTimeout(() => setIsShaking(false), 500);
+
     // Get the new count directly
     const newCount = clickCount + 1;
     
@@ -669,7 +675,7 @@ export default function Header() {
           <img
             src="/hero.png"
             alt="Carter Tran"
-            className={`rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain cursor-pointer transition-transform duration-300 ${isPopped ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+            className={`rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain cursor-pointer transition-transform duration-300 ${isPopped ? 'scale-0 opacity-0' : 'scale-100 opacity-100'} ${isShaking ? 'animate-shake' : ''}`}
             onClick={handleHeroClick}
             title="Click for a surprise"
           />
