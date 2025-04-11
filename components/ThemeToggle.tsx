@@ -20,7 +20,7 @@ export default function ThemeToggle() {
       <input 
         type="checkbox"
         id="theme-toggle"
-        checked={resolvedTheme === "dark"}
+        checked={resolvedTheme === "light"}
         onChange={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       />
       <label htmlFor="theme-toggle" className="toggle">
