@@ -23,6 +23,7 @@ export default function Navbar() {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       const viewportHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
 
       if (scrollPosition > viewportHeight / 2) {
         setShowNavbar(true);
@@ -32,6 +33,15 @@ export default function Navbar() {
 
       // Skip section detection if user just clicked a navigation item
       if (isManualNavigation) return;
+
+      // Check if user has scrolled to bottom of the page
+      const isAtBottom = window.innerHeight + window.pageYOffset >= documentHeight - 50;
+      
+      if (isAtBottom) {
+        // If at the bottom, set current section to Contact
+        setCurrentSection("Contact");
+        return;
+      }
 
       // Update current section based on scroll position
       const sections = navItems.map(item => ({
