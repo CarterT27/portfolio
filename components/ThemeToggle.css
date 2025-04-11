@@ -1,3 +1,9 @@
+/* Add pixelated rendering to all elements */
+* {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
 .wrapper {
   position: relative;
   display: inline-flex;
@@ -17,7 +23,7 @@
   width: 100px;
   height: 50px;
   background: #211042;
-  border-radius: 25px;
+  border-radius: 8px; /* More square corners for pixelated look */
   transition: 500ms;
   overflow: hidden;
   vertical-align: middle;
@@ -30,7 +36,7 @@
   left: 3px;
   width: 43px;
   height: 43px;
-  border-radius: 50%;
+  border-radius: 8px; /* More square corners for pixelated look */
   background: #FAEAF1;
   overflow: hidden;
   box-shadow: 0 0 17.5px 2px rgba(255, 255, 255);
@@ -41,7 +47,7 @@
   position: absolute;
   display: inline-block;
   background: #FAEAF1;
-  border-radius: 50%;
+  border-radius: 4px; /* More square corners for pixelated look */
   transition: 500ms;
 }
 
@@ -51,6 +57,7 @@
   height: 43px;
   left: 5px;
   bottom: 5px;
+  border-radius: 6px; /* More square for pixelated look */
 }
 
 .crater-2 {
@@ -98,7 +105,7 @@
 .star {
   position: absolute;
   display: inline-block;
-  border-radius: 50%;
+  border-radius: 2px; /* Less rounded for pixelated look */
   background: #FFF;
   box-shadow: 1px 0 2px 2px rgba(255, 255, 255);
 }
@@ -141,7 +148,7 @@
 .star-6, .star-7, .star-8 {
   width: 5px;
   height: 1px;
-  border-radius: 1px;
+  border-radius: 0; /* Square edges for pixelated look */
   transform: rotate(-45deg);
   box-shadow: 2.5px 0px 2px 0.5px #FFF;
   animation-name: travel;
@@ -209,7 +216,7 @@
 #theme-toggle:checked + .toggle .star-1 {
   width: 20px;
   height: 5px;
-  border-radius: 5px;
+  border-radius: 2px; /* Less rounded for pixelated look */
   background: #FFF;
   left: 10px;
   top: 12.5px;
@@ -277,6 +284,16 @@
   left: 42.5px;
   top: 17.5px;
   box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
+}
+
+#theme-toggle:checked + .toggle .star-2,
+#theme-toggle:checked + .toggle .star-3,
+#theme-toggle:checked + .toggle .star-4,
+#theme-toggle:checked + .toggle .star-5,
+#theme-toggle:checked + .toggle .star-6,
+#theme-toggle:checked + .toggle .star-7,
+#theme-toggle:checked + .toggle .star-8 {
+  border-radius: 1px; /* Squarer corners for pixelated look */
 }
 
 @keyframes move {
