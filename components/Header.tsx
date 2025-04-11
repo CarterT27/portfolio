@@ -622,6 +622,16 @@ export default function Header() {
     if (newCount >= 20) {
       console.log('Explosion triggered!');
       setIsPopped(true);
+      
+      // Clear all seagulls when explosion is triggered
+      setSeagulls([]);
+      
+      // Cancel all seagull animation frames
+      animationFrameIds.current.forEach((id) => {
+        cancelAnimationFrame(id);
+      });
+      animationFrameIds.current.clear();
+      
       // Use setTimeout to ensure state updates before explosion
       setTimeout(() => {
         createExplosion();
