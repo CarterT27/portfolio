@@ -654,7 +654,7 @@ export default function Header() {
 
         <div
           ref={heroRef}
-          className={`relative lg:block min-w-[256px] max-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden`}
+          className={`relative hidden lg:block min-w-[256px] max-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden`}
         >
           {/* Render all active seagulls */}
           {seagulls.map((seagull) => (
