@@ -613,7 +613,7 @@ export default function Header() {
     setClickCount(newCount);
 
     // Handle logic based on count
-    if (newCount >= 5) {
+    if (newCount >= 20) {
       console.log('Explosion triggered!');
       setIsPopped(true);
       // Use setTimeout to ensure state updates before explosion
