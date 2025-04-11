@@ -117,19 +117,82 @@ type Seagull = {
   isFlying: boolean;
 };
 
+// Define a type for pixel particles
+type Pixel = {
+  id: string;
+  x: number;
+  y: number;
+  size: number;
+  color: string;
+  velocityX: number;
+  velocityY: number;
+  rotation: number;
+  rotationSpeed: number;
+  settled: boolean;
+};
+
 // Generate a guaranteed unique ID
 const generateUniqueId = (): string => {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 };
+
+// Simple seeded random number generator
+class SeededRandom {
+  private seed: number;
+
+  constructor(seed: number) {
+    this.seed = seed;
+  }
+
+  // Linear Congruential Generator implementation
+  next(): number {
+    // Constants for the LCG algorithm (same as Java's implementation)
+    const a = 1664525;
+    const c = 1013904223;
+    const m = Math.pow(2, 32);
+    
+    // Update the seed
+    this.seed = (a * this.seed + c) % m;
+    
+    // Return a value between 0 and 1
+    return this.seed / m;
+  }
+  
+  // Get a random integer between min (inclusive) and max (exclusive)
+  nextInt(min: number, max: number): number {
+    return Math.floor(this.next() * (max - min) + min);
+  }
+}
 
 export default function Header() {
   const [showArrow, setShowArrow] = useState(true);
   const [seagulls, setSeagulls] = useState<Seagull[]>([]);
   const [clickCount, setClickCount] = useState(0);
   const [isPopped, setIsPopped] = useState(false);
+  const [pixels, setPixels] = useState<Pixel[]>([]);
+  const [isExploding, setIsExploding] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [sampledColors, setSampledColors] = useState<string[]>([]);
   const heroRef = useRef<HTMLDivElement>(null);
+  const pixelContainerRef = useRef<HTMLDivElement>(null);
   const animationFrameIds = useRef<Map<string, number>>(new Map());
+  const pixelsRef = useRef<Pixel[]>([]);
   const { displayText: nameText, isTypingComplete: isNameTypingComplete, showCursor: nameShowCursor, isAnimationComplete } = useTypingEffect("Carter Tran", 150);
+
+  // Keep the pixels ref in sync with state
+  useEffect(() => {
+    pixelsRef.current = pixels;
+  }, [pixels]);
+
+  // Track scroll position for pixel rendering optimization
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // State to track if blurb animation should start
   const [shouldStartBlurbAnimation, setShouldStartBlurbAnimation] = useState(false);
@@ -184,6 +247,256 @@ export default function Header() {
       });
     };
   }, []);
+
+  // Handle pixel animation
+  useEffect(() => {
+    if (!isExploding || pixels.length === 0) return;
+
+    const gravity = 0.8;
+    const friction = 0.99;
+    
+    // Don't use React state for animation updates - use the ref directly
+    let currentPixels = [...pixelsRef.current];
+    let animationRunning = true;
+    let lastTime = performance.now();
+    let rafId: number;
+    let updateCounter = 0;
+
+    // Function to update all pixels in a single frame
+    const animatePixels = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+
+      if (!animationRunning) return;
+
+      let anyPixelMoving = false;
+      updateCounter++;
+
+      // Get viewport bounds
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const screenBottom = window.scrollY + viewportHeight + 100; // Add a buffer
+
+      // Update each pixel position
+      for (let i = 0; i < currentPixels.length; i++) {
+        const pixel = currentPixels[i];
+        
+        // Skip if already settled
+        if (pixel.settled) continue;
+
+        // Apply gravity and friction
+        let newVelocityY = pixel.velocityY + gravity;
+        let newVelocityX = pixel.velocityX * friction;
+        let newY = pixel.y + newVelocityY;
+        let newX = pixel.x + newVelocityX;
+        let newRotation = pixel.rotation + pixel.rotationSpeed;
+        let isSettled = false;
+
+        // Check if pixel is off-screen - mark as settled if it is
+        if (newY > screenBottom || 
+            newX < -100 || 
+            newX > viewportWidth + 100) {
+          isSettled = true;
+        }
+
+        // Update pixel with new values
+        currentPixels[i] = {
+          ...pixel,
+          x: newX,
+          y: newY,
+          velocityX: newVelocityX,
+          velocityY: newVelocityY,
+          rotation: newRotation,
+          settled: isSettled
+        };
+
+        // Check if any pixel is still moving
+        if (!isSettled) {
+          anyPixelMoving = true;
+        }
+      }
+
+      // Only update React state every few frames to avoid performance issues
+      if (updateCounter % 3 === 0 || !anyPixelMoving) {
+        setPixels([...currentPixels]);
+      }
+
+      // Continue animation if any pixel is still moving
+      if (anyPixelMoving) {
+        rafId = requestAnimationFrame(animatePixels);
+      } else {
+        animationRunning = false;
+        console.log("All pixels settled or disappeared");
+      }
+    };
+    
+    // Start the animation
+    rafId = requestAnimationFrame(animatePixels);
+
+    // Cleanup function
+    return () => {
+      animationRunning = false;
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [isExploding]); // Only depend on isExploding, not pixels.length
+
+  // Debug: log state changes
+  useEffect(() => {
+    console.log('State changed - clickCount:', clickCount, 'isPopped:', isPopped, 'pixels:', pixels.length);
+  }, [clickCount, isPopped, pixels.length]);
+
+  // Utility function to sample colors from an image
+  const sampleColorsFromImage = (imageElement: HTMLImageElement, sampleCount: number, random: SeededRandom): string[] => {
+    // Create an off-screen canvas to draw and sample from the image
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return getDefaultColors();
+
+    // Set canvas dimensions based on image (can be smaller for performance)
+    const maxDimension = 200; // Limit size for performance
+    const scaleFactor = Math.min(1, maxDimension / Math.max(imageElement.width, imageElement.height));
+    
+    canvas.width = imageElement.width * scaleFactor;
+    canvas.height = imageElement.height * scaleFactor;
+    
+    // Draw the image on the canvas
+    ctx.drawImage(imageElement, 0, 0, canvas.width, canvas.height);
+    
+    // Get the image data
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    
+    // Sample pixels from the image data
+    const colors: string[] = [];
+    const totalPixels = canvas.width * canvas.height;
+    
+    // Deterministic sampling using fixed intervals instead of random selection
+    // This ensures we always get the same colors from the same image
+    const sampleEvery = Math.max(1, Math.floor(totalPixels / sampleCount));
+    const startOffset = random.nextInt(0, sampleEvery); // Random but deterministic starting point
+    
+    for (let pixelIndex = startOffset; pixelIndex < totalPixels; pixelIndex += sampleEvery) {
+      const i = pixelIndex * 4; // Convert to RGBA array index
+      
+      if (i + 3 >= pixels.length) continue; // Skip if out of bounds
+      
+      const r = pixels[i];
+      const g = pixels[i + 1];
+      const b = pixels[i + 2];
+      const a = pixels[i + 3];
+      
+      // Skip transparent pixels
+      if (a < 128) continue;
+      
+      // Convert to hex - ensure two digits for each component
+      const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+      colors.push(hex);
+      
+      if (colors.length >= sampleCount) break;
+    }
+    
+    // If we couldn't get enough samples, fill with defaults
+    if (colors.length < sampleCount) {
+      const defaultColors = getDefaultColors();
+      // Add default colors in a deterministic pattern
+      for (let i = 0; i < sampleCount - colors.length; i++) {
+        colors.push(defaultColors[i % defaultColors.length]);
+      }
+    }
+    
+    return colors;
+  };
+  
+  // Fallback colors if sampling fails
+  const getDefaultColors = (): string[] => {
+    return [
+      '#3B82F6', '#10B981', '#F59E0B', '#EF4444', 
+      '#8B5CF6', '#EC4899', '#6366F1', '#14B8A6',
+      '#F472B6', '#84CC16', '#0EA5E9', '#A855F7'
+    ];
+  };
+
+  const createExplosion = () => {
+    // Get hero element dimensions for pixel generation
+    const heroElement = heroRef.current?.querySelector('img') as HTMLImageElement | null;
+    if (!heroElement) return;
+
+    const rect = heroElement.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    // Sample colors from the hero image
+    const numPixels = 120; // Increase number of pixels since they'll be smaller
+    let imageColors: string[] = [];
+    
+    // Create a seeded random generator using a hash of the image src
+    // This ensures consistent results for the same image
+    const imageSrcHash = heroElement.src.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const random = new SeededRandom(imageSrcHash);
+    
+    // Only attempt to sample if the image is loaded
+    if (heroElement.complete && heroElement.naturalWidth > 0) {
+      try {
+        // Use a fixed number of colors to ensure determinism
+        imageColors = sampleColorsFromImage(heroElement, 50, random);
+        // Store sampled colors for debugging (only in dev mode)
+        if (process.env.NODE_ENV === 'development') {
+          setSampledColors(imageColors);
+        }
+      } catch (error) {
+        console.error('Error sampling colors from image:', error);
+        imageColors = getDefaultColors();
+        if (process.env.NODE_ENV === 'development') {
+          setSampledColors(imageColors);
+        }
+      }
+    } else {
+      imageColors = getDefaultColors();
+      if (process.env.NODE_ENV === 'development') {
+        setSampledColors(imageColors);
+      }
+    }
+    
+    const newPixels: Pixel[] = [];
+    
+    // Set a consistent pixel size
+    const pixelSize = 6; // Fixed size for all pixels
+    
+    // Pre-generate all random values to ensure determinism
+    const pixelData = [];
+    for (let i = 0; i < numPixels; i++) {
+      pixelData.push({
+        angle: random.next() * Math.PI * 2,
+        force: 10 + random.next() * 25,
+        colorIndex: random.nextInt(0, imageColors.length),
+        randomOffset1: 0.5 + random.next(),
+        randomOffset2: 0.5 + random.next(),
+        rotation: random.next() * 360,
+        rotationSpeed: random.next() * 15 - 7.5
+      });
+    }
+    
+    // Create the pixels using the pre-generated random values
+    for (let i = 0; i < numPixels; i++) {
+      const data = pixelData[i];
+      
+      newPixels.push({
+        id: generateUniqueId(),
+        x: centerX,
+        y: centerY,
+        size: pixelSize,
+        color: imageColors[data.colorIndex],
+        velocityX: Math.cos(data.angle) * data.force * data.randomOffset1,
+        velocityY: Math.sin(data.angle) * data.force * data.randomOffset2 - 20,
+        rotation: data.rotation,
+        rotationSpeed: data.rotationSpeed,
+        settled: false
+      });
+    }
+    
+    setPixels(newPixels);
+    setIsExploding(true);
+  };
 
   const animateSeagull = (seagullId: string, time: number) => {
     let lastTime = time;
@@ -292,18 +605,25 @@ export default function Header() {
 
     // Get the new count directly
     const newCount = clickCount + 1;
+    
+    // Log click for debugging
+    console.log('Hero clicked, count:', newCount);
 
     // Update the click count
     setClickCount(newCount);
 
     // Handle logic based on count
-    // Temporarily disable popping effect
-    // if (newCount >= 5) {
-    //   setIsPopped(true);
-    // } else {
-    // Spawn a new seagull on every click (no limit)
-    spawnNewSeagull();
-    // }
+    if (newCount >= 5) {
+      console.log('Explosion triggered!');
+      setIsPopped(true);
+      // Use setTimeout to ensure state updates before explosion
+      setTimeout(() => {
+        createExplosion();
+      }, 10);
+    } else {
+      // Spawn a new seagull on every click (no limit)
+      spawnNewSeagull();
+    }
   };
 
   return (
@@ -328,8 +648,7 @@ export default function Header() {
 
         <div
           ref={heroRef}
-          className={`relative hidden lg:block min-w-[256px] max-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden ${isPopped ? 'hidden' : ''
-            }`}
+          className={`relative lg:block min-w-[256px] max-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden`}
         >
           {/* Render all active seagulls */}
           {seagulls.map((seagull) => (
@@ -350,13 +669,56 @@ export default function Header() {
           <img
             src="/hero.png"
             alt="Carter Tran"
-            className={`rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain cursor-pointer transition-transform duration-300 ${isPopped ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
-              }`}
+            className={`rounded-lg w-auto h-auto max-w-full max-h-[min(calc(100vh-4rem),600px)] object-contain cursor-pointer transition-transform duration-300 ${isPopped ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
             onClick={handleHeroClick}
             title="Click for a surprise"
           />
         </div>
       </div>
+
+      {/* Pixel explosion container (absolutely positioned to cover the whole document) */}
+      {isExploding && (
+        <div 
+          ref={pixelContainerRef}
+          className="fixed pointer-events-none z-[100]"
+          style={{ 
+            overflow: 'visible',
+            width: '100vw',
+            height: '100vh',
+            position: 'fixed',
+            top: 0,
+            left: 0
+          }}
+        >
+          {/* Only render pixels within the viewport */}
+          {pixels.filter(pixel => {
+            // Get the current scroll position
+            const scrollY = window.scrollY;
+            const viewportHeight = window.innerHeight;
+            
+            // Only render pixels that are visible in the viewport
+            return pixel.y < (scrollY + viewportHeight + 100) && // Don't render too far below
+                   pixel.y > (scrollY - 100) && // Don't render too far above
+                   pixel.x > -100 && // Don't render too far left
+                   pixel.x < window.innerWidth + 100; // Don't render too far right
+          }).map(pixel => (
+            <div
+              key={pixel.id}
+              className="absolute rounded-sm"
+              style={{
+                left: 0,
+                top: 0,
+                width: `${pixel.size}px`,
+                height: `${pixel.size}px`,
+                backgroundColor: pixel.color,
+                transform: `translate3d(${pixel.x}px, ${pixel.y}px, 0) rotate(${pixel.rotation}deg)`,
+                willChange: 'transform',
+                position: 'absolute'
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {showArrow && isAnimationComplete && (
         <div
@@ -373,6 +735,29 @@ export default function Header() {
             icon={faChevronDown}
             className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors"
           />
+        </div>
+      )}
+
+      {/* Debugging: Color Palette Display - only shown in development mode */}
+      {process.env.NODE_ENV === 'development' && isExploding && sampledColors.length > 0 && (
+        <div 
+          className="fixed bottom-4 left-4 z-[200] bg-black/70 p-3 rounded-lg"
+          style={{
+            maxWidth: '80vw',
+            overflow: 'auto'
+          }}
+        >
+          <div className="text-xs text-white mb-2">Debug: Sampled Colors ({sampledColors.length})</div>
+          <div className="flex flex-wrap gap-1 max-h-32 overflow-y-auto">
+            {sampledColors.map((color, index) => (
+              <div 
+                key={index} 
+                className="w-6 h-6 rounded border border-white/30"
+                style={{ backgroundColor: color }}
+                title={color}
+              />
+            ))}
+          </div>
         </div>
       )}
     </>
