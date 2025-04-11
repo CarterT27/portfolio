@@ -21,7 +21,7 @@ export default function Home() {
               <h2 className="text-3xl font-bold mb-8 text-center">Experience</h2>
               <Timeline />
             </div>
-            <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-[20vh] lg:h-[min(100%,400px)]">
+            <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-[calc(50vh-150px)] lg:h-[400px] flex items-center justify-center">
               <Avatar />
             </div>
           </div>
