@@ -728,7 +728,7 @@ export default function Header() {
 
       {showArrow && isAnimationComplete && (
         <div
-          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer animate-bounce z-10 transition-opacity duration-1000"
+          className="fixed bottom-8 left-0 right-0 mx-auto w-fit cursor-pointer animate-bounce z-10 transition-opacity duration-1000"
           aria-label="Scroll down"
           onClick={() => {
             const experienceSection = document.getElementById('experience');
