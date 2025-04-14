@@ -131,7 +131,7 @@ export async function getProjects(): Promise<Project[]> {
       description:
         "Automated an ETL pipeline with OpenRouter API for integrating LLM domain knowledge into the AutoML paradigm. Validated performance of generated features using XGBoost and scikit-learn models across 3 benchmark datasets.",
       tags: ["Python", "Large Language Models", "AutoML", "ETL"],
-      github: null,
+      github: "https://github.com/CarterT27/FASTER",
       live: null,
       image: "/logos/automl.png",
     },
