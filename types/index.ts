@@ -32,3 +32,10 @@ export interface Project {
   image: string
   imageScale?: number // Optional scaling factor for project images
 }
+
+export interface GithubStats {
+  followers: number
+  following: number
+  public_repos: number
+  public_gists: number
+}
