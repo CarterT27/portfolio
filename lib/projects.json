@@ -6,6 +6,7 @@
     "tags": ["Python", "C#", "Quantitative Finance", "Machine Learning"],
     "github": null,
     "live": null,
+    "year": 2025,
     "image": "/logos/quantconnect.png"
   },
   {
@@ -15,6 +16,7 @@
     "tags": ["Python", "Data Engineering", "Web Scraping", "Playwright"],
     "github": null,
     "live": null,
+    "year": 2024,
     "image": "/logos/atptour.png"
   },
   {
@@ -24,6 +26,7 @@
     "tags": ["Large Language Models", "Topic Modeling", "Question-Answering", "D3.js"],
     "github": null,
     "live": null,
+    "year": 2023,
     "image": "/logos/obsidian.png"
   },
   {
@@ -33,6 +36,7 @@
     "tags": ["Python", "Large Language Models", "AutoML", "ETL"],
     "github": "https://github.com/CarterT27/FASTER",
     "live": null,
+    "year": 2025,
     "image": "/logos/automl.png"
   },
   {
@@ -42,6 +46,7 @@
     "tags": ["Python", "Large Language Models", "RAG", "Heroku"],
     "github": null,
     "live": null,
+    "year": 2023,
     "image": "/logos/txtTutor.svg",
     "imageScale": 1
   },
@@ -52,6 +57,7 @@
     "tags": ["Python", "Natural Language Processing", "Big Data", "Dask", "Plotly"],
     "github": "https://github.com/CarterT27/Apple-Watch-Personalized-Health-Insights",
     "live": null,
+    "year": 2024,
     "image": "/logos/applehealth.png"
   },
   {
@@ -61,6 +67,7 @@
     "tags": ["Next.js", "TypeScript", "Pixi.js"],
     "github": "https://github.com/CarterT27/portfolio",
     "live": null,
+    "year": 2025,
     "image": "/logos/nextjs.png"
   },
   {
@@ -70,6 +77,7 @@
     "tags": ["Placeholder"],
     "github": null,
     "live": null,
+    "year": 2020,
     "image": "/logos/placeholder.png"
   },
   {
@@ -79,6 +87,7 @@
     "tags": ["Placeholder"],
     "github": null,
     "live": null,
+    "year": 2020,
     "image": "/logos/placeholder.png"
   },
   {
@@ -88,6 +97,7 @@
     "tags": ["Placeholder"],
     "github": null,
     "live": null,
+    "year": 2021,
     "image": "/logos/placeholder.png"
   },
   {
@@ -97,6 +107,7 @@
     "tags": ["Placeholder"],
     "github": null,
     "live": null,
+    "year": 2022,
     "image": "/logos/placeholder.png"
   },
   {
@@ -106,6 +117,7 @@
     "tags": ["Placeholder"],
     "github": null,
     "live": null,
+    "year": 2022,
     "image": "/logos/placeholder.png"
   }
 ] 
