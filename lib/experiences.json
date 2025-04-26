@@ -1,0 +1,81 @@
+[
+  {
+    "company": "Amazon",
+    "role": "Software Development Engineer Intern",
+    "date": "Expected Summer 2025",
+    "description": "Incoming SDEI at Amazon.",
+    "url": "https://www.amazon.com",
+    "avatar_state": {
+      "background": "amazon_seattle.png",
+      "layers": [
+        { "image": "amazon.png", "zIndex": 10, "width": 192, "height": 192, "x": 0, "y": 0, "bounce": false },
+        { "image": "rocket.png", "zIndex": 20, "width": 80, "height": 80, "x": 100, "y": -100, "bounce": true }
+      ]
+    }
+  },
+  {
+    "company": "Translational Neurophysiology Lab | UC San Diego Health",
+    "role": "Machine Learning Researcher",
+    "date": "Sep. 2024 - Present",
+    "description": "Fine-tune foundational EEG Transformer model for real-time seizure detection and discover quantitative biomarkers using EEG and EMG data.",
+    "url": "https://neurosciences.ucsd.edu/research/labs/ung/index.html#",
+    "avatar_state": {
+      "layers": [
+        { "image": "brain.png", "zIndex": 10, "width": 100, "height": 100, "x": 0, "y": 0, "bounce": false }
+      ]
+    }
+  },
+  {
+    "company": "WorldQuant",
+    "role": "Quantitative Research Consultant",
+    "date": "May 2024 - Present",
+    "description": "Research, implement, and backtest equity trading strategies for potential portfolio integration. National Finalist in International Quant Championship 2024.",
+    "url": "https://worldquant.com",
+    "avatar_state": {
+      "layers": [
+        { "image": "candlesticks.png", "zIndex": 10, "width": 192, "height": 192, "x": 0, "y": 0, "bounce": false }
+      ]
+    }
+  },
+  {
+    "company": "UC San Diego",
+    "role": "Teaching Assistant",
+    "date": "Mar. 2024 - Present",
+    "description": "Tutor for DSC 20: Programming and Data Structures (Python), DSC 30: Data Structures and Algorithms (Java).",
+    "url": "https://datascience.ucsd.edu/",
+    "avatar_state": {
+      "background": "geisel.png",
+      "layers": [
+        { "image": "java.png", "zIndex": 10, "width": 150, "height": 150, "x": -80, "y": 0, "bounce": false },
+        { "image": "python.png", "zIndex": 20, "width": 150, "height": 150, "x": 80, "y": 0, "bounce": false }
+      ]
+    }
+  },
+  {
+    "company": "Triton Quantitative Trading",
+    "role": "VP of Machine Learning",
+    "date": "Oct. 2023 - Present",
+    "description": "Lead machine learning initiatives, achieving 1st place in multiple QuantConnect League competitions.",
+    "url": "https://www.tquantt.com",
+    "avatar_state": {
+      "background": "geisel.png",
+      "layers": [
+        { "image": "candlesticks.png", "zIndex": 10, "width": 192, "height": 192, "x": 0, "y": 0, "bounce": false }
+      ]
+    }
+  },
+  {
+    "company": "Nationwide Pet",
+    "role": "Data Analytics Intern",
+    "date": "Jun. 2022 - Jul. 2022",
+    "description": "Analyzed claims data to improve the standard of care for our furry friends.",
+    "url": "https://www.petinsurance.com/",
+    "avatar_state": {
+      "background": "basis.png",
+      "layers": [
+        { "image": "nationwide.png", "zIndex": 10, "width": 192, "height": 192, "x": 0, "y": 0, "bounce": false },
+        { "image": "dog.png", "zIndex": 20, "width": 100, "height": 100, "x": 70, "y": 50, "bounce": true }
+      ]
+    }
+  }
+] 

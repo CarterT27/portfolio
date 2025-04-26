@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGithub } from "@fortawesome/free-brands-svg-icons"
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import type { Project } from "@/types"
@@ -53,6 +54,7 @@ export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null)
+  const [showAllProjects, setShowAllProjects] = useState(false)
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -73,9 +75,12 @@ export default function Projects() {
     return <div className="py-12 text-center">Loading projects...</div>
   }
 
+  const visibleProjects = showAllProjects ? projects : projects.slice(0, 3);
+  const hiddenProjectsCount = projects.length - 3;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {projects.map((project, index) => (
+      {visibleProjects.map((project, index) => (
         <ProjectCard 
           key={index} 
           project={project} 
@@ -84,6 +89,82 @@ export default function Projects() {
           setExpandedCardIndex={setExpandedCardIndex}
         />
       ))}
+      
+      {!showAllProjects && hiddenProjectsCount > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 3 * 0.1 }}
+          whileHover={{
+            y: -5,
+            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+            scale: 1.02,
+            transition: { duration: 0.2 }
+          }}
+          className={`h-full ${
+            visibleProjects.length % 3 === 0 ? "lg:col-start-2 md:col-start-2 col-span-1" :
+            visibleProjects.length % 3 === 1 ? "lg:col-start-2 md:col-start-1 col-span-1" :
+            visibleProjects.length % 3 === 2 ? "lg:col-start-3 md:col-start-2 col-span-1" : ""
+          }`}
+          onClick={() => setShowAllProjects(true)}
+        >
+          <Card className="h-full transition-all duration-300 cursor-pointer flex flex-col items-center justify-center">
+            <CardHeader className="p-4 text-center">
+              <CardTitle>Show {hiddenProjectsCount} More Projects</CardTitle>
+              <CardDescription>Click to view all my work</CardDescription>
+            </CardHeader>
+
+            <CardContent className="p-4 pt-0 flex-1 flex items-center justify-center">
+              <div className="w-full flex flex-col items-center justify-center">
+                <div className="rounded-full bg-secondary w-16 h-16 flex items-center justify-center mb-4">
+                  <FontAwesomeIcon icon={faPlus} className="h-8 w-8 text-secondary-foreground" />
+                </div>
+                <p className="text-center text-sm text-muted-foreground">
+                  Explore {hiddenProjectsCount} additional projects in my portfolio
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+      
+      {showAllProjects && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          whileHover={{
+            y: -5,
+            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+            scale: 1.02,
+            transition: { duration: 0.2 }
+          }}
+          className={`h-full ${
+            projects.length % 3 === 0 ? "lg:col-start-2 md:col-start-2 col-span-1" :
+            projects.length % 3 === 1 ? "lg:col-start-2 md:col-start-1 col-span-1" :
+            projects.length % 3 === 2 ? "lg:col-start-3 md:col-start-2 col-span-1" : ""
+          }`}
+          onClick={() => setShowAllProjects(false)}
+        >
+          <Card className="h-full transition-all duration-300 cursor-pointer flex flex-col items-center justify-center">
+            <CardHeader className="p-4 text-center">
+              <CardTitle>Show Fewer Projects</CardTitle>
+              <CardDescription>Return to featured work</CardDescription>
+            </CardHeader>
+
+            <CardContent className="p-4 pt-0 flex-1 flex items-center justify-center">
+              <div className="w-full flex flex-col items-center justify-center">
+                <div className="rounded-full bg-secondary w-16 h-16 flex items-center justify-center mb-4">
+                  <FontAwesomeIcon icon={faMinus} className="h-8 w-8 text-secondary-foreground" />
+                </div>
+                <p className="text-center text-sm text-muted-foreground">
+                  Display only featured projects
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
     </div>
   )
 }
