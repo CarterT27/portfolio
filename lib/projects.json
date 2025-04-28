@@ -1,5 +1,15 @@
 [
   {
+    "title": "IMC Prosperity 3",
+    "summary": "Trading algorithm for IMC Prosperity 3 competition (9th Global, 2nd USA)",
+    "description": "Developed algorithmic trading strategies for IMC's Prosperity 3 competition, placing 9th globally and 2nd in the USA with a peak ranking of 2nd globally. Implemented various strategies including market making, statistical arbitrage, and options pricing with Black-Scholes model. Identified insider trading patterns through data analysis to inform trading decisions.",
+    "tags": ["Python", "Algorithmic Trading", "Statistical Arbitrage", "Options Pricing", "Black-Scholes"],
+    "github": "https://github.com/CarterT27/imc-prosperity-3",
+    "live": null,
+    "year": 2025,
+    "image": "/logos/prosperity.png"
+  },
+  {
     "title": "Algorithmic Trading Bot",
     "summary": "Trading system using quantitative analysis and machine learning",
     "description": "Engineered features with TA-Lib and scipy for quantitative data, NLTK and spaCy for sentiment analysis. Developed trading strategies on QuantConnect with scikit-learn and XGBoost for performance improvement.",
