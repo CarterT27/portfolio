@@ -55,6 +55,12 @@ export default function Projects() {
   const [loading, setLoading] = useState(true)
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null)
   const [showAllProjects, setShowAllProjects] = useState(false)
+  const [isDevelopment, setIsDevelopment] = useState(false)
+  
+  useEffect(() => {
+    // Check if we're running in development mode
+    setIsDevelopment(process.env.NODE_ENV === 'development')
+  }, [])
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -77,9 +83,16 @@ export default function Projects() {
 
   const visibleProjects = showAllProjects ? projects : projects.slice(0, 3);
   const hiddenProjectsCount = projects.length - 3;
+  const hasPlaceholders = projects.some(project => project.title === "Placeholder");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {isDevelopment && hasPlaceholders && (
+        <div className="col-span-full mb-4 p-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-sm rounded text-center">
+          Development Mode: Placeholder projects are visible. These will be hidden in production.
+        </div>
+      )}
+      
       {visibleProjects.map((project, index) => (
         <ProjectCard 
           key={index} 
