@@ -31,6 +31,7 @@ export interface Project {
   live: string | null
   image: string
   imageScale?: number // Optional scaling factor for project images
+  year: number // Project completion year
 }
 
 export interface GithubStats {

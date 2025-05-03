@@ -20,6 +20,16 @@
     "image": "/logos/quantconnect.png"
   },
   {
+    "title": "FASTER",
+    "summary": "Feature Automation, Selection, Transformation, Extraction Routine",
+    "description": "Automated an ETL pipeline with OpenRouter API for integrating LLM domain knowledge into the AutoML paradigm. Validated performance of generated features using XGBoost and scikit-learn models across 3 benchmark datasets.",
+    "tags": ["Python", "Large Language Models", "AutoML", "ETL"],
+    "github": "https://github.com/CarterT27/FASTER",
+    "live": null,
+    "year": 2025,
+    "image": "/logos/automl.png"
+  },
+  {
     "title": "Tennis Match Prediction",
     "summary": "Data engineering pipeline for ATP Tour tennis match prediction",
     "description": "Developed vectorized and event-driven backtesting frameworks for tennis matches and odds. Asynchronously scraped data with playwright and reverse-engineered tennis websites to optimize bandwidth usage.",
@@ -38,16 +48,6 @@
     "live": null,
     "year": 2023,
     "image": "/logos/obsidian.png"
-  },
-  {
-    "title": "FASTER",
-    "summary": "Feature Automation, Selection, Transformation, Extraction Routine",
-    "description": "Automated an ETL pipeline with OpenRouter API for integrating LLM domain knowledge into the AutoML paradigm. Validated performance of generated features using XGBoost and scikit-learn models across 3 benchmark datasets.",
-    "tags": ["Python", "Large Language Models", "AutoML", "ETL"],
-    "github": "https://github.com/CarterT27/FASTER",
-    "live": null,
-    "year": 2025,
-    "image": "/logos/automl.png"
   },
   {
     "title": "txtTutor",
@@ -87,17 +87,7 @@
     "tags": ["Placeholder"],
     "github": null,
     "live": null,
-    "year": 2020,
-    "image": "/logos/placeholder.png"
-  },
-  {
-    "title": "Placeholder",
-    "summary": "Placeholder",
-    "description": "Placeholder",
-    "tags": ["Placeholder"],
-    "github": null,
-    "live": null,
-    "year": 2020,
+    "year": 2022,
     "image": "/logos/placeholder.png"
   },
   {
@@ -117,7 +107,7 @@
     "tags": ["Placeholder"],
     "github": null,
     "live": null,
-    "year": 2022,
+    "year": 2020,
     "image": "/logos/placeholder.png"
   },
   {
@@ -127,7 +117,7 @@
     "tags": ["Placeholder"],
     "github": null,
     "live": null,
-    "year": 2022,
+    "year": 2020,
     "image": "/logos/placeholder.png"
   }
 ] 

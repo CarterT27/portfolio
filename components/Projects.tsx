@@ -218,6 +218,11 @@ function ProjectCard({
       <Card className="h-full transition-all duration-300">
         <CardHeader className="p-4">
           <CardTitle>{project.title}</CardTitle>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-semibold px-2 py-0.5 bg-primary/10 text-primary rounded-full">
+              {project.year}
+            </span>
+          </div>
           <CardDescription>{project.summary}</CardDescription>
         </CardHeader>
 
