@@ -33,6 +33,11 @@ export interface Project {
   imageScale?: number // Optional scaling factor for project images
 }
 
+export interface ProjectFilterState {
+  searchTerm: string
+  selectedYear: string | null
+}
+
 export interface GithubStats {
   followers: number
   following: number

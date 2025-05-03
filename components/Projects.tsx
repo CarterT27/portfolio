@@ -4,13 +4,14 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGithub } from "@fortawesome/free-brands-svg-icons"
-import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
+import { faArrowUpRightFromSquare, faFilter } from "@fortawesome/free-solid-svg-icons"
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import type { Project } from "@/types"
+import type { Project, ProjectFilterState } from "@/types"
 import { getProjects } from "@/lib/data"
 import { useTheme } from "next-themes"
+import ProjectFilters from "@/components/ProjectFilters"
 
 // Theme-aware image component that switches between dark and light variants
 function ThemeAwareImage({ src, alt, className, scale }: { src: string; alt: string; className?: string; scale?: number }) {
@@ -52,10 +53,16 @@ function ThemeAwareImage({ src, alt, className, scale }: { src: string; alt: str
 
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([])
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null)
   const [showAllProjects, setShowAllProjects] = useState(false)
   const [isDevelopment, setIsDevelopment] = useState(false)
+  const [showFilters, setShowFilters] = useState(true)
+  const [filterState, setFilterState] = useState<ProjectFilterState>({
+    searchTerm: "",
+    selectedYear: null
+  })
   
   useEffect(() => {
     // Check if we're running in development mode
@@ -67,6 +74,7 @@ export default function Projects() {
       try {
         const data = await getProjects()
         setProjects(data)
+        setFilteredProjects(data)
       } catch (error) {
         console.error("Error fetching projects:", error)
       } finally {
@@ -77,107 +85,161 @@ export default function Projects() {
     fetchProjects()
   }, [])
 
+  // Apply filters when filterState changes
+  useEffect(() => {
+    if (!projects.length) return
+    
+    let filtered = [...projects]
+    
+    // Filter by search term
+    if (filterState.searchTerm) {
+      const searchLower = filterState.searchTerm.toLowerCase()
+      filtered = filtered.filter(project => 
+        project.title.toLowerCase().includes(searchLower) ||
+        project.summary.toLowerCase().includes(searchLower) ||
+        project.description.toLowerCase().includes(searchLower) ||
+        project.tags.some(tag => tag.toLowerCase().includes(searchLower))
+      )
+    }
+    
+    // Filter by year
+    if (filterState.selectedYear) {
+      filtered = filtered.filter(project => 
+        project.tags.includes(filterState.selectedYear as string)
+      )
+    }
+    
+    setFilteredProjects(filtered)
+  }, [projects, filterState])
+
+  const handleFilterChange = (newFilterState: ProjectFilterState) => {
+    setFilterState(newFilterState)
+  }
+
   if (loading) {
     return <div className="py-12 text-center">Loading projects...</div>
   }
 
-  const visibleProjects = showAllProjects ? projects : projects.slice(0, 3);
-  const hiddenProjectsCount = projects.length - 3;
+  const visibleProjects = showAllProjects ? filteredProjects : filteredProjects.slice(0, 3);
+  const hiddenProjectsCount = filteredProjects.length - 3;
   const hasPlaceholders = projects.some(project => project.title === "Placeholder");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {isDevelopment && hasPlaceholders && (
-        <div className="col-span-full mb-4 p-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-sm rounded text-center">
-          Development Mode: Placeholder projects are visible. These will be hidden in production.
-        </div>
-      )}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Projects</h2>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center gap-2"
+        >
+          <FontAwesomeIcon icon={faFilter} className="h-4 w-4" />
+          {showFilters ? "Hide Filters" : "Show Filters"}
+        </Button>
+      </div>
       
-      {visibleProjects.map((project, index) => (
-        <ProjectCard 
-          key={index} 
-          project={project} 
-          index={index} 
-          isExpanded={expandedCardIndex === index}
-          setExpandedCardIndex={setExpandedCardIndex}
+      {showFilters && (
+        <ProjectFilters 
+          projects={projects}
+          filterState={filterState}
+          onFilterChange={handleFilterChange}
         />
-      ))}
-      
-      {!showAllProjects && hiddenProjectsCount > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 3 * 0.1 }}
-          whileHover={{
-            y: -5,
-            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-            scale: 1.02,
-            transition: { duration: 0.2 }
-          }}
-          className={`h-full ${
-            visibleProjects.length % 3 === 0 ? "lg:col-start-2 md:col-start-2 col-span-1" :
-            visibleProjects.length % 3 === 1 ? "lg:col-start-2 md:col-start-1 col-span-1" :
-            visibleProjects.length % 3 === 2 ? "lg:col-start-3 md:col-start-2 col-span-1" : ""
-          }`}
-          onClick={() => setShowAllProjects(true)}
-        >
-          <Card className="h-full transition-all duration-300 cursor-pointer flex flex-col items-center justify-center">
-            <CardHeader className="p-4 text-center">
-              <CardTitle>Show {hiddenProjectsCount} More Projects</CardTitle>
-              <CardDescription>Click to view all my work</CardDescription>
-            </CardHeader>
-
-            <CardContent className="p-4 pt-0 flex-1 flex items-center justify-center">
-              <div className="w-full flex flex-col items-center justify-center">
-                <div className="rounded-full bg-secondary w-16 h-16 flex items-center justify-center mb-4">
-                  <FontAwesomeIcon icon={faPlus} className="h-8 w-8 text-secondary-foreground" />
-                </div>
-                <p className="text-center text-sm text-muted-foreground">
-                  Explore {hiddenProjectsCount} additional projects in my portfolio
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
       )}
       
-      {showAllProjects && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          whileHover={{
-            y: -5,
-            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-            scale: 1.02,
-            transition: { duration: 0.2 }
-          }}
-          className={`h-full ${
-            projects.length % 3 === 0 ? "lg:col-start-2 md:col-start-2 col-span-1" :
-            projects.length % 3 === 1 ? "lg:col-start-2 md:col-start-1 col-span-1" :
-            projects.length % 3 === 2 ? "lg:col-start-3 md:col-start-2 col-span-1" : ""
-          }`}
-          onClick={() => setShowAllProjects(false)}
-        >
-          <Card className="h-full transition-all duration-300 cursor-pointer flex flex-col items-center justify-center">
-            <CardHeader className="p-4 text-center">
-              <CardTitle>Show Fewer Projects</CardTitle>
-              <CardDescription>Return to featured work</CardDescription>
-            </CardHeader>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isDevelopment && hasPlaceholders && (
+          <div className="col-span-full mb-4 p-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-sm rounded text-center">
+            Development Mode: Placeholder projects are visible. These will be hidden in production.
+          </div>
+        )}
+        
+        {visibleProjects.map((project, index) => (
+          <ProjectCard 
+            key={index} 
+            project={project} 
+            index={index} 
+            isExpanded={expandedCardIndex === index}
+            setExpandedCardIndex={setExpandedCardIndex}
+          />
+        ))}
+        
+        {!showAllProjects && hiddenProjectsCount > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 3 * 0.1 }}
+            whileHover={{
+              y: -5,
+              boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+              scale: 1.02,
+              transition: { duration: 0.2 }
+            }}
+            className={`h-full ${
+              visibleProjects.length % 3 === 0 ? "lg:col-start-2 md:col-start-2 col-span-1" :
+              visibleProjects.length % 3 === 1 ? "lg:col-start-2 md:col-start-1 col-span-1" :
+              visibleProjects.length % 3 === 2 ? "lg:col-start-3 md:col-start-2 col-span-1" : ""
+            }`}
+            onClick={() => setShowAllProjects(true)}
+          >
+            <Card className="h-full transition-all duration-300 cursor-pointer flex flex-col items-center justify-center">
+              <CardHeader className="p-4 text-center">
+                <CardTitle>Show {hiddenProjectsCount} More Projects</CardTitle>
+                <CardDescription>Click to view all my work</CardDescription>
+              </CardHeader>
 
-            <CardContent className="p-4 pt-0 flex-1 flex items-center justify-center">
-              <div className="w-full flex flex-col items-center justify-center">
-                <div className="rounded-full bg-secondary w-16 h-16 flex items-center justify-center mb-4">
-                  <FontAwesomeIcon icon={faMinus} className="h-8 w-8 text-secondary-foreground" />
+              <CardContent className="p-4 pt-0 flex-1 flex items-center justify-center">
+                <div className="w-full flex flex-col items-center justify-center">
+                  <div className="rounded-full bg-secondary w-16 h-16 flex items-center justify-center mb-4">
+                    <FontAwesomeIcon icon={faPlus} className="h-8 w-8 text-secondary-foreground" />
+                  </div>
+                  <p className="text-center text-sm text-muted-foreground">
+                    Explore {hiddenProjectsCount} additional projects in my portfolio
+                  </p>
                 </div>
-                <p className="text-center text-sm text-muted-foreground">
-                  Display only featured projects
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+        
+        {showAllProjects && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            whileHover={{
+              y: -5,
+              boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+              scale: 1.02,
+              transition: { duration: 0.2 }
+            }}
+            className={`h-full ${
+              filteredProjects.length % 3 === 0 ? "lg:col-start-2 md:col-start-2 col-span-1" :
+              filteredProjects.length % 3 === 1 ? "lg:col-start-2 md:col-start-1 col-span-1" :
+              filteredProjects.length % 3 === 2 ? "lg:col-start-3 md:col-start-2 col-span-1" : ""
+            }`}
+            onClick={() => setShowAllProjects(false)}
+          >
+            <Card className="h-full transition-all duration-300 cursor-pointer flex flex-col items-center justify-center">
+              <CardHeader className="p-4 text-center">
+                <CardTitle>Show Fewer Projects</CardTitle>
+                <CardDescription>Return to featured work</CardDescription>
+              </CardHeader>
+
+              <CardContent className="p-4 pt-0 flex-1 flex items-center justify-center">
+                <div className="w-full flex flex-col items-center justify-center">
+                  <div className="rounded-full bg-secondary w-16 h-16 flex items-center justify-center mb-4">
+                    <FontAwesomeIcon icon={faMinus} className="h-8 w-8 text-secondary-foreground" />
+                  </div>
+                  <p className="text-center text-sm text-muted-foreground">
+                    Display only featured projects
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+      </div>
     </div>
   )
 }
