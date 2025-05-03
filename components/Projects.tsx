@@ -220,7 +220,7 @@ function ProjectCard({
           <CardTitle>{project.title}</CardTitle>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-semibold px-2 py-0.5 bg-primary/10 text-primary rounded-full">
-              {project.year}
+              {project.tags.find(tag => /^\d{4}$/.test(tag))}
             </span>
           </div>
           <CardDescription>{project.summary}</CardDescription>
@@ -247,7 +247,9 @@ function ProjectCard({
           >
             <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
             <div className="flex flex-wrap gap-2 mb-4">
-              {project.tags.map((tag, i) => (
+              {project.tags
+                .filter(tag => !/^\d{4}$/.test(tag))
+                .map((tag, i) => (
                 <span key={i} className="text-xs px-2 py-1 bg-secondary text-secondary-foreground rounded-full">
                   {tag}
                 </span>
