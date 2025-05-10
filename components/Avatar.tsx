@@ -9,11 +9,17 @@ import { useTheme } from "next-themes"
 // Determine the time of day variant to use
 function getTimeVariant(
   forcedVariant?: 'day' | 'night' | 'sunrise_sunset',
-  theme?: string | undefined
+  theme?: string | undefined,
+  isClient: boolean = false
 ): 'day' | 'night' | 'sunrise_sunset' {
   // If a variant is forced (for testing), use it
   if (forcedVariant) {
     return forcedVariant;
+  }
+
+  // For SSR, return a stable value
+  if (!isClient) {
+    return 'day';
   }
 
   const hour = new Date().getHours();
@@ -40,9 +46,10 @@ function getTimeVariant(
 function getBackgroundUrl(
   background: string | undefined, 
   forcedVariant?: 'day' | 'night' | 'sunrise_sunset',
-  theme?: string
+  theme?: string,
+  isClient: boolean = false
 ): string {
-  const timeVariant = getTimeVariant(forcedVariant, theme);
+  const timeVariant = getTimeVariant(forcedVariant, theme, isClient);
 
   if (!background) {
     // Default background with time variant
@@ -67,9 +74,7 @@ export default function Avatar() {
   const { avatarState } = useAvatarContext()
   const { resolvedTheme } = useTheme()
   const [bobPosition, setBobPosition] = useState(0)
-  const [backgroundUrl, setBackgroundUrl] = useState<string>(() =>
-    getBackgroundUrl(avatarState.background, undefined, resolvedTheme)
-  )
+  const [backgroundUrl, setBackgroundUrl] = useState<string>('/avatar/geisel.png') // Default to a static image for SSR
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
   const [forcedTimeVariant, setForcedTimeVariant] = useState<'day' | 'night' | 'sunrise_sunset' | undefined>(undefined)
   const [bounceLayers, setBounceLayers] = useState<Record<number, boolean>>({})
@@ -84,7 +89,7 @@ export default function Avatar() {
     if (!mounted) return;
     
     // Update background URL when avatarState changes or theme changes
-    const newUrl = getBackgroundUrl(avatarState.background, forcedTimeVariant, resolvedTheme);
+    const newUrl = getBackgroundUrl(avatarState.background, forcedTimeVariant, resolvedTheme, true);
     setBackgroundUrl(newUrl)
 
     // Set fallback URLs in order of preference:
@@ -94,12 +99,12 @@ export default function Avatar() {
     if (avatarState.background) {
       setFallbackUrl(`/avatar/${avatarState.background}`);
     } else {
-      setFallbackUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant, resolvedTheme)}.png`);
+      setFallbackUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant, resolvedTheme, true)}.png`);
     }
 
     // Update background URL every minute to check for time changes
     const intervalId = setInterval(() => {
-      setBackgroundUrl(getBackgroundUrl(avatarState.background, forcedTimeVariant, resolvedTheme))
+      setBackgroundUrl(getBackgroundUrl(avatarState.background, forcedTimeVariant, resolvedTheme, true))
     }, 60000) // Check every minute
 
     return () => clearInterval(intervalId)
@@ -131,7 +136,7 @@ export default function Avatar() {
       setBackgroundUrl(fallbackUrl);
     } else if (fallbackUrl === `/avatar/${avatarState.background}`) {
       // If the original background fails, try the default geisel with time variant
-      setBackgroundUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant, resolvedTheme)}.png`);
+      setBackgroundUrl(`/avatar/geisel_${getTimeVariant(forcedTimeVariant, resolvedTheme, true)}.png`);
     } else {
       // If all else fails, use the basic geisel
       setBackgroundUrl('/avatar/geisel.png');
@@ -231,7 +236,7 @@ export default function Avatar() {
             <p>Using: {backgroundUrl.split('/').pop()}</p>
             <p>Layers: {avatarState.layers.length}</p>
             <p>Theme: {resolvedTheme || 'loading...'}</p>
-            <p>Time variant: {getTimeVariant(forcedTimeVariant, resolvedTheme)}</p>
+            <p>Time variant: {getTimeVariant(forcedTimeVariant, resolvedTheme, true)}</p>
 
             {/* Time variant test controls */}
             <div className="mt-2 flex justify-center gap-1">

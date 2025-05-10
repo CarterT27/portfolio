@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons"
+import { faChartLine } from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export default function Footer() {
   return (
@@ -29,6 +31,16 @@ export default function Footer() {
             >
               <FontAwesomeIcon icon={faLinkedin} className="h-6 w-6" />
             </a>
+          </Button>
+
+          <Button variant="ghost" size="icon" asChild>
+            <Link
+              href="/meta"
+              aria-label="Website Meta"
+              className="hover:text-primary transition-colors"
+            >
+              <FontAwesomeIcon icon={faChartLine} className="h-6 w-6" />
+            </Link>
           </Button>
         </div>
 

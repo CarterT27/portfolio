@@ -131,11 +131,6 @@ type Pixel = {
   settled: boolean;
 };
 
-// Generate a guaranteed unique ID
-const generateUniqueId = (): string => {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-};
-
 // Simple seeded random number generator
 class SeededRandom {
   private seed: number;
@@ -164,6 +159,14 @@ class SeededRandom {
   }
 }
 
+// Generate a guaranteed unique ID using a seeded random number generator
+const generateUniqueId = (seed: number): string => {
+  const random = new SeededRandom(seed);
+  // Use a stable timestamp for SSR
+  const timestamp = typeof window !== 'undefined' ? Date.now() : 0;
+  return `${timestamp}-${random.next().toString(36).substr(2, 9)}`;
+};
+
 export default function Header() {
   const [showArrow, setShowArrow] = useState(true);
   const [seagulls, setSeagulls] = useState<Seagull[]>([]);
@@ -174,11 +177,17 @@ export default function Header() {
   const [scrollY, setScrollY] = useState(0);
   const [sampledColors, setSampledColors] = useState<string[]>([]);
   const [isShaking, setIsShaking] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const pixelContainerRef = useRef<HTMLDivElement>(null);
   const animationFrameIds = useRef<Map<string, number>>(new Map());
   const pixelsRef = useRef<Pixel[]>([]);
   const { displayText: nameText, isTypingComplete: isNameTypingComplete, showCursor: nameShowCursor, isAnimationComplete } = useTypingEffect("Carter Tran", 150);
+
+  // Handle mounting to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Keep the pixels ref in sync with state
   useEffect(() => {
@@ -187,13 +196,15 @@ export default function Header() {
 
   // Track scroll position for pixel rendering optimization
   useEffect(() => {
+    if (!mounted) return;
+    
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [mounted]);
 
   // State to track if blurb animation should start
   const [shouldStartBlurbAnimation, setShouldStartBlurbAnimation] = useState(false);
@@ -482,7 +493,7 @@ export default function Header() {
       const data = pixelData[i];
       
       newPixels.push({
-        id: generateUniqueId(),
+        id: generateUniqueId(imageSrcHash),
         x: centerX,
         y: centerY,
         size: pixelSize,
@@ -568,11 +579,15 @@ export default function Header() {
   };
 
   const spawnNewSeagull = () => {
+    // Use a seeded random number generator with a consistent seed
+    const seed = Date.now();
+    const random = new SeededRandom(seed);
+
     // Generate random height between 5% and 20%
-    const randomHeight = Math.floor(Math.random() * 16) + 5;
+    const randomHeight = Math.floor(random.next() * 16) + 5;
 
     // Randomly choose direction
-    const randomDirection = Math.random() > 0.5 ? 'ltr' : 'rtl';
+    const randomDirection = random.next() > 0.5 ? 'ltr' : 'rtl';
 
     // Set initial position based on direction
     let initialPosition;
@@ -584,8 +599,8 @@ export default function Header() {
       initialPosition = heroWidth + 50; // Start from right
     }
 
-    // Generate a completely unique ID using timestamp and random string
-    const seagullId = generateUniqueId();
+    // Generate a unique ID using the same seed
+    const seagullId = generateUniqueId(seed);
 
     const newSeagull: Seagull = {
       id: seagullId,
