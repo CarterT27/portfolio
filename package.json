@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "count-loc": "npx elocuent -d \"app,components,context,hooks,lib,new_toggle,public/meta,styles,types\" -t \"html,css,tsx,js\" -o public/meta/loc.csv"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
