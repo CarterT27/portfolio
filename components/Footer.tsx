@@ -34,13 +34,13 @@ export default function Footer() {
           </Button>
 
           <Button variant="ghost" size="icon" asChild>
-            <Link
+            <a
               href="/meta"
               aria-label="Website Meta"
               className="hover:text-primary transition-colors"
             >
               <FontAwesomeIcon icon={faChartLine} className="h-6 w-6" />
-            </Link>
+            </a>
           </Button>
         </div>
 

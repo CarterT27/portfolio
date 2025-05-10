@@ -11,6 +11,9 @@ try {
   }
 }
 
+// Import the preprocessCommitData function
+import { preprocessCommitData } from './lib/commit-data.js';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -48,4 +51,14 @@ if (userConfig) {
   }
 }
 
-export default nextConfig
+// Run preprocessCommitData during build
+const nextConfigWithBuildHook = {
+  ...nextConfig,
+  onBuildStart: async () => {
+    console.log('Preprocessing commit data for build...');
+    await preprocessCommitData();
+    console.log('Commit data preprocessing complete');
+  }
+}
+
+export default nextConfigWithBuildHook

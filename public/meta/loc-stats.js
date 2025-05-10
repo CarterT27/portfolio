@@ -5,55 +5,35 @@ let xScale;
 let yScale;
 let data;
 let commits;
+let isInitialized = false;
 
-async function loadData() {
-  const loadedData = await d3.csv('/meta/loc.csv', (row) => ({
-      ...row,
-      line: Number(row.line), 
-      depth: Number(row.depth),
-      length: Number(row.length),
-      date: new Date(row.date + 'T00:00' + row.timezone),
-      datetime: new Date(row.datetime),
-  }));
+console.log('D3 Visualization script loaded');
 
-  return loadedData;
+// Check if data is preloaded
+function getPreloadedData() {
+  const dataElement = document.getElementById('commit-data');
+  if (dataElement) {
+    try {
+      const parsed = JSON.parse(dataElement.textContent);
+      console.log('Preloaded data found:', { dataLength: parsed.data?.length || 0 });
+      return parsed;
+    } catch (error) {
+      console.error('Error parsing preloaded commit data:', error);
+      return null;
+    }
+  }
+  console.log('No preloaded data found, will load from CSV');
+  return null;
 }
 
-function processCommits(data) {
-  return d3
-    .groups(data, (d) => d.commit)
-    .map(([commit, lines]) => {
-      let first = lines[0];
-      let { author, date, time, timezone, datetime } = first;
-      let ret = {
-          id: commit,
-          url: 'https://github.com/cartert27/portfolio/commit/' + commit,
-          author,
-          date,
-          time,
-          timezone,
-          datetime,
-          hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
-          totalLines: lines.length,
-      };
+// Add CSS styling for visualization
+function addStylesheet() {
+  // Check if the style has already been added
+  if (document.getElementById('loc-stats-style')) return;
 
-      Object.defineProperty(ret, 'lines', {
-          value: lines,       // Set the value of 'lines'
-          enumerable: false,  // Hide it from `console.log(obj)`
-          writable: false,    // Prevent accidental modification
-          configurable: false // Prevent deletion or reconfiguration
-      });
-
-      return ret;
-    });
-}
-
-function renderCommitInfo(data, commits) {
-  // Create the dl element
-  const dl = d3.select('#stats').append('dl').attr('class', 'stats grid grid-cols-2 gap-2 mb-8 font-mono');
-
-  // Add CSS styling
+  console.log('Adding visualization styles');
   const style = document.createElement('style');
+  style.id = 'loc-stats-style';
   style.textContent = `
     .stats dt {
       font-weight: bold;
@@ -170,6 +150,84 @@ function renderCommitInfo(data, commits) {
     }
   `;
   document.head.appendChild(style);
+}
+
+async function loadData() {
+  // First check if we have preloaded data
+  const preloadedData = getPreloadedData();
+  if (preloadedData && preloadedData.data) {
+    console.log('Using preloaded data');
+    return preloadedData.data.map(d => ({
+      ...d,
+      date: new Date(d.date),
+      datetime: new Date(d.datetime),
+    }));
+  }
+  
+  // Fall back to CSV loading if no preloaded data
+  console.log('Loading data from CSV');
+  const loadedData = await d3.csv('/meta/loc.csv', (row) => ({
+      ...row,
+      line: Number(row.line), 
+      depth: Number(row.depth),
+      length: Number(row.length),
+      date: new Date(row.date + 'T00:00' + row.timezone),
+      datetime: new Date(row.datetime),
+  }));
+
+  return loadedData;
+}
+
+function processCommits(data) {
+  // First check if we have preloaded commit data
+  const preloadedData = getPreloadedData();
+  if (preloadedData && preloadedData.commits) {
+    console.log('Using preloaded commit data');
+    // Convert datetime strings back to Date objects
+    return preloadedData.commits.map(commit => ({
+      ...commit,
+      datetime: new Date(commit.datetime),
+      lines: commit.lines
+    }));
+  }
+  
+  // Fall back to processing if no preloaded data
+  console.log('Processing commits from data');
+  return d3
+    .groups(data, (d) => d.commit)
+    .map(([commit, lines]) => {
+      let first = lines[0];
+      let { author, date, time, timezone, datetime } = first;
+      let ret = {
+          id: commit,
+          url: 'https://github.com/cartert27/portfolio/commit/' + commit,
+          author,
+          date,
+          time,
+          timezone,
+          datetime,
+          hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
+          totalLines: lines.length,
+      };
+
+      Object.defineProperty(ret, 'lines', {
+          value: lines,       // Set the value of 'lines'
+          enumerable: false,  // Hide it from `console.log(obj)`
+          writable: false,    // Prevent accidental modification
+          configurable: false // Prevent deletion or reconfiguration
+      });
+
+      return ret;
+    });
+}
+
+function renderCommitInfo(data, commits) {
+  console.log('Rendering commit info');
+  // Clear previous content
+  d3.select('#stats').html('');
+  
+  // Create the dl element
+  const dl = d3.select('#stats').append('dl').attr('class', 'stats grid grid-cols-2 gap-2 mb-8 font-mono');
 
   // Add total LOC
   dl.append('dt').html('Total <abbr title="Lines of code">LOC</abbr>');
@@ -204,6 +262,7 @@ function renderCommitInfo(data, commits) {
 }
 
 function renderScatterPlot(data, commits) {
+  console.log('Rendering scatter plot');
   // Clear previous chart if it exists
   d3.select('#chart').selectAll('*').remove();
   
@@ -303,6 +362,8 @@ function renderScatterPlot(data, commits) {
 
 function renderTooltipContent(commit) {
   const tooltip = document.getElementById('commit-tooltip');
+  if (!tooltip) return;
+
   const commitId = commit.id;
   const shortId = commitId.substring(0, 7); // Show short commit hash
   
@@ -323,6 +384,8 @@ function renderTooltipContent(commit) {
 
 function updateTooltipVisibility(isVisible) {
   const tooltip = document.getElementById('commit-tooltip');
+  if (!tooltip) return;
+  
   if (isVisible) {
     tooltip.classList.add('visible');
     tooltip.hidden = false;
@@ -330,7 +393,7 @@ function updateTooltipVisibility(isVisible) {
     tooltip.classList.remove('visible');
     setTimeout(() => {
       // Only hide if still not visible class (prevents flicker)
-      if (!tooltip.classList.contains('visible')) {
+      if (tooltip && !tooltip.classList.contains('visible')) {
         tooltip.hidden = true;
       }
     }, 150);
@@ -339,6 +402,7 @@ function updateTooltipVisibility(isVisible) {
 
 function updateTooltipPosition(event) {
   const tooltip = document.getElementById('commit-tooltip');
+  if (!tooltip) return;
   
   // Calculate position to avoid going off screen
   const tooltipWidth = 300; // Max width defined in CSS
@@ -411,6 +475,8 @@ function renderSelectionCount(selection) {
     : [];
 
   const countElement = document.querySelector('#selection-count');
+  if (!countElement) return;
+  
   countElement.textContent = `${
     selectedCommits.length || 'No'
   } commits selected`;
@@ -423,6 +489,7 @@ function renderLanguageBreakdown(selection) {
     ? commits.filter((d) => isCommitSelected(selection, d))
     : [];
   const container = document.getElementById('language-breakdown');
+  if (!container) return;
 
   if (selectedCommits.length === 0) {
     container.innerHTML = '';
@@ -452,52 +519,97 @@ function renderLanguageBreakdown(selection) {
   }
 }
 
-// Initialize the visualization
-async function init() {
-  try {
-    // Set up the tooltip element
-    const tooltip = document.getElementById('commit-tooltip');
-    tooltip.style.position = 'fixed';
-    tooltip.style.pointerEvents = 'auto'; // Allow interaction with tooltip
-    tooltip.style.zIndex = '1000';
-    
-    // Add tooltip hover events
+// Setup tooltip functions
+function setupTooltip() {
+  const tooltip = document.getElementById('commit-tooltip');
+  if (!tooltip) return;
+  
+  tooltip.style.position = 'fixed';
+  tooltip.style.pointerEvents = 'auto'; // Allow interaction with tooltip
+  tooltip.style.zIndex = '1000';
+  
+  // Add tooltip hover events
+  window.isOverTooltip = false;
+  tooltip.addEventListener('mouseenter', () => {
+    window.isOverTooltip = true;
+  });
+  tooltip.addEventListener('mouseleave', () => {
     window.isOverTooltip = false;
-    tooltip.addEventListener('mouseenter', () => {
-      window.isOverTooltip = true;
-    });
-    tooltip.addEventListener('mouseleave', () => {
-      window.isOverTooltip = false;
-      updateTooltipVisibility(false);
-    });
+    updateTooltipVisibility(false);
+  });
+}
+
+// Make initialization function accessible globally
+async function initVisualization() {
+  // Prevent duplicate initialization
+  if (isInitialized) {
+    console.log('Visualization already initialized, skipping');
+    return;
+  }
+  
+  console.log('Starting visualization initialization');
+  
+  try {
+    const statsElement = document.getElementById('stats');
+    const chartElement = document.getElementById('chart');
     
-    // Load data and render visualizations
+    // Check if elements exist
+    if (!statsElement || !chartElement) {
+      console.error('Required DOM elements not found');
+      return;
+    }
+    
+    // Add CSS styling first
+    addStylesheet();
+    
+    // Setup tooltip
+    setupTooltip();
+    
+    // Load data
     data = await loadData();
     commits = processCommits(data);
     
-    // Hide loading and show visualizations
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('stats').style.display = 'block';
-    document.getElementById('chart').style.display = 'block';
-    document.getElementById('selection-count').style.display = 'block';
-    document.getElementById('language-breakdown').style.display = 'block';
+    // Clear any loading indicators
+    const loadingElement = document.getElementById('loading');
+    if (loadingElement) {
+      loadingElement.style.display = 'none';
+    }
     
+    // Render visualization
     renderCommitInfo(data, commits);
     renderScatterPlot(data, commits);
+    
+    // Mark as initialized
+    isInitialized = true;
     
     // Add window resize handler for responsiveness
     window.addEventListener('resize', () => {
       renderScatterPlot(data, commits);
     });
+    
+    console.log('Visualization initialized successfully');
   } catch (error) {
     console.error('Error initializing visualization:', error);
-    document.getElementById('loading').innerHTML = `
-      <div class="text-red-500">
-        <p>Error loading visualization data.</p>
-        <p class="text-sm mt-2">${error.message}</p>
-      </div>
-    `;
+    const loadingElement = document.getElementById('loading');
+    if (loadingElement) {
+      loadingElement.innerHTML = `
+        <div class="text-red-500">
+          <p>Error loading visualization data.</p>
+          <p class="text-sm mt-2">${error.message}</p>
+        </div>
+      `;
+    }
   }
 }
 
-init(); 
+// Export function to global scope for client component access
+window.initVisualization = initVisualization;
+
+// Initialize on page load (both direct and client-side navigation)
+if (document.readyState === 'loading') {
+  // Still loading, add event listener
+  document.addEventListener('DOMContentLoaded', initVisualization);
+} else {
+  // DOM already loaded, run now
+  initVisualization();
+} 

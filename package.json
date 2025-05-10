@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "npm run count-loc && next build",
     "start": "next start",
     "lint": "next lint",
     "count-loc": "npx elocuent -d \"app,components,context,hooks,lib,new_toggle,public/meta,styles,types\" -t \"html,css,tsx,js\" -o public/meta/loc.csv"
