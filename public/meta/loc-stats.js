@@ -250,6 +250,194 @@ function addStylesheet() {
       border-radius: 8px;
       border-left: 4px solid #3b82f6;
     }
+    
+    /* Virtual scrolling styles */
+    #scroll-container, #scroll-container-2 {
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      position: relative;
+    }
+    
+    #items-container, #items-container-2 {
+      position: relative;
+    }
+    
+    .item, .item-longest {
+      position: absolute;
+      width: 100%;
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      background: white;
+      box-sizing: border-box;
+    }
+    
+    .item p, .item-longest div {
+      margin: 0;
+      line-height: 1.5;
+    }
+    
+    .item a, .item-longest a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+    
+    .item a:hover, .item-longest a:hover {
+      text-decoration: underline;
+    }
+    
+    .line {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      margin: 1px;
+      border-radius: 50%;
+    }
+    
+    #files-longest dt {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    #files-longest dd {
+      margin-bottom: 1rem;
+      margin-left: 0;
+    }
+    
+    #files-longest code {
+      background: #f1f5f9;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    
+    #files-longest small {
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+    
+    /* Additional structural styles from style.css */
+    #scrollytelling {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    #scroll-container {
+      grid-column: 1;
+      position: relative;
+      width: 95%;
+      height: 350px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      margin-bottom: 50px;
+    }
+
+    #chart {
+      grid-column: 2;
+    }
+
+    #spacer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: none;
+      pointer-events: none;
+    }
+
+    #items-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .item {
+      height: 100px;
+      padding: 10px;
+      box-sizing: border-box;
+      border-bottom: 2px solid #eee;
+    }
+
+    #scrollytelling-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+      border: 1px solid #ccc;
+      padding: 1rem;
+    }
+
+    #scroll-container-2 {
+      height: 80vh;
+      overflow-y: scroll;
+      position: relative;
+      border: 1px solid #ccc;
+    }
+
+    #spacer-2 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: none;
+    }
+
+    #items-container-2 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    .item-longest {
+      position: absolute;
+      width: 90%;
+      margin: 0 auto;
+      background: #f5f5f5;
+      border: 2px solid #eee;
+      box-sizing: border-box;
+      padding: 0.5em;
+      border-radius: 4px;
+    }
+
+    #files-longest {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+
+    .files {
+      display: grid;
+      gap: 0.5em;
+      margin-top: 1em;
+    }
+
+    /* Unit visualization line styling */
+    .line {
+      display: flex;
+      width: 0.5em;
+      aspect-ratio: 1;
+      background: steelblue;
+      border-radius: 50%;
+    }
+
+    dd {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: start;
+      gap: 0.15em;
+      padding-top: 0.6em;
+      margin-left: 0;
+    }
   `;
   document.head.appendChild(style);
 }
@@ -289,7 +477,8 @@ function processCommits(data) {
     const commits = preloadedData.commits.map(commit => ({
       ...commit,
       datetime: new Date(commit.datetime),
-      lines: commit.lines
+      lines: commit.lines,
+      longestLine: commit.longestLine || 0
     }));
     return d3.sort(commits, d => d.datetime); // Sort by datetime
   }
@@ -319,6 +508,8 @@ function processCommits(data) {
           writable: false,    // Prevent accidental modification
           configurable: false // Prevent deletion or reconfiguration
       });
+      
+      ret.longestLine = d3.max(lines, d => d.length) || 0;
 
       return ret;
     });
@@ -371,8 +562,14 @@ function onTimeSliderChange() {
   // Filter commits
   filteredCommits = commits.filter((d) => d.datetime <= commitMaxTime);
   
+  // Filter data to match the filtered commits
+  const filteredData = data.filter((d) => d.datetime <= commitMaxTime);
+  
   // Update scatter plot
   updateScatterPlot(data, filteredCommits);
+  
+  // Update unit visualization (files by size) with filtered data
+  renderUnitVisualization(filteredData);
 }
 
 function createTimeControls() {
@@ -502,29 +699,46 @@ function renderCommitInfo(data, commits) {
   dl.append('dd').text(maxFile + ' (' + maxFileLength + ')');
 }
 
-function renderUnitVisualization() {
-  if (!files || files.length === 0) return;
+function renderUnitVisualization(filteredData = null) {
+  // Use filtered data if provided, otherwise use all files
+  const dataToUse = filteredData || data;
+  if (!dataToUse || dataToUse.length === 0) return;
+  
+  // Process files from the filtered data
+  const processedFiles = d3
+    .groups(dataToUse, (d) => d.file)
+    .map(([name, lines]) => {
+      return { name, lines };
+    })
+    .sort((a, b) => b.lines.length - a.lines.length);
   
   const colors = d3.scaleOrdinal(d3.schemeTableau10);
   
-  const filesContainer = d3.select('#files')
+  const filesContainer = d3.select('#files');
+  
+  // Clear previous content
+  filesContainer.selectAll('*').remove();
+  
+  const filesData = processedFiles.flatMap(file => [
+    { type: 'dt', file },
+    { type: 'dd', file }
+  ]);
+  
+  const selection = filesContainer
     .selectAll('dt, dd')
-    .data(files.flatMap(file => [
-      { type: 'dt', file },
-      { type: 'dd', file }
-    ]))
+    .data(filesData, d => `${d.type}-${d.file.name}`)
     .join(enter => {
-      const selection = enter.append(d => 
+      const newSelection = enter.append(d => 
         document.createElement(d.type)
       );
       
       // Handle dt elements (file names)
-      selection
+      newSelection
         .filter(d => d.type === 'dt')
         .text(d => d.file.name);
         
       // Handle dd elements (dots)
-      const ddElements = selection
+      const ddElements = newSelection
         .filter(d => d.type === 'dd');
         
       ddElements
@@ -534,7 +748,7 @@ function renderUnitVisualization() {
         .attr('class', 'loc')
         .attr('style', (d) => `background: ${colors(d.type)}`);
         
-      return selection;
+      return newSelection;
     });
 }
 
@@ -577,8 +791,14 @@ function setupScrollytelling() {
       // Update filtered commits
       filteredCommits = commits.filter((d) => d.datetime <= currentTime);
       
+      // Filter data to match the filtered commits
+      const filteredData = data.filter((d) => d.datetime <= currentTime);
+      
       // Update visualization
       updateScatterPlot(data, filteredCommits);
+      
+      // Update unit visualization (files by size) with filtered data
+      renderUnitVisualization(filteredData);
       
       // Update slider if it exists
       const slider = document.getElementById('commit-progress');
@@ -662,9 +882,10 @@ function renderScatterPlot(data, commits) {
   // Initialize time controls and filtering
   initializeTimeControls();
   
-  // Check if we're not in scrollytelling mode before creating time controls
-  const scrollyContainer = document.getElementById('scrolly-1');
-  if (!scrollyContainer) {
+  // Check if we're in scrollytelling mode - if so, don't create time controls
+  const scrollytellingContainer = document.getElementById('scrollytelling');
+  const scrollContainer = document.getElementById('scroll-container');
+  if (!scrollytellingContainer && !scrollContainer) {
     createTimeControls();
   }
   
@@ -894,6 +1115,203 @@ function setupTooltip() {
   });
 }
 
+// Virtual scrolling for first scrollytelling
+function setupVirtualScrolling() {
+  const scrollContainer = document.getElementById('scroll-container');
+  const itemsContainer = document.getElementById('items-container');
+  const spacer = document.getElementById('spacer');
+  
+  if (!scrollContainer || !itemsContainer || !spacer) return;
+  
+  const NUM_ITEMS = commits.length;
+  const ITEM_HEIGHT = 100;
+  const VISIBLE_COUNT = Math.ceil(400 / ITEM_HEIGHT) + 1; // Buffer for smooth scrolling
+  
+  const totalHeight = NUM_ITEMS * ITEM_HEIGHT;
+  spacer.style.height = `${totalHeight}px`;
+  
+  function renderItems(startIndex) {
+    // Clear previous items
+    itemsContainer.innerHTML = '';
+    
+    const endIndex = Math.min(startIndex + VISIBLE_COUNT, commits.length);
+    const visibleCommits = commits.slice(startIndex, endIndex);
+    
+    // Filter data up to the last visible commit
+    const filteredCommits = commits.slice(0, endIndex);
+    const endDateTime = commits[endIndex - 1]?.datetime;
+    const filteredData = data.filter(d => d.datetime <= endDateTime);
+    
+    // Update visualizations
+    renderCommitInfo(filteredData, filteredCommits);
+    updateScatterPlot(data, filteredCommits);
+    updateFileInfo(filteredCommits);
+    
+    // Update unit visualization (files by size) with filtered data
+    renderUnitVisualization(filteredData);
+    
+    // Render visible items
+    visibleCommits.forEach((commit, idx) => {
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.style.top = `${(startIndex + idx) * ITEM_HEIGHT}px`;
+      
+      const commitDate = new Date(commit.datetime);
+      const dateStr = commitDate.toLocaleString("en", { dateStyle: "full", timeStyle: "short" });
+      const fileCount = d3.rollups(commit.lines, d => d.length, d => d.file).length;
+      const message = (startIndex + idx) > 0 ? 'another glorious commit' : 'my first commit, and it was glorious';
+      
+      item.innerHTML = `
+        <p>
+          On ${dateStr}, I made
+          <a href="${commit.url}" target="_blank">${message}</a>.
+          I edited ${commit.totalLines} lines across ${fileCount} files.
+          Then I looked over all I had made, and I saw that it was very good.
+        </p>
+      `;
+      
+      itemsContainer.appendChild(item);
+    });
+  }
+  
+  function onScroll() {
+    const scrollTop = scrollContainer.scrollTop;
+    let startIndex = Math.floor(scrollTop / ITEM_HEIGHT);
+    startIndex = Math.max(0, Math.min(startIndex, commits.length - VISIBLE_COUNT));
+    renderItems(startIndex);
+  }
+  
+  scrollContainer.addEventListener('scroll', onScroll);
+  renderItems(0);
+}
+
+function updateFileInfo(filteredCommits) {
+  const fileTypeColors = d3.scaleOrdinal(d3.schemeTableau10);
+  const lines = filteredCommits.flatMap((d) => d.lines);
+  
+  const files = d3
+    .groups(lines, (d) => d.file)
+    .map(([name, lines]) => ({ name, lines }))
+    .sort((a, b) => b.lines.length - a.lines.length);
+
+  // Clear previous content
+  d3.select('.files').selectAll('*').remove();
+
+  const filesContainer = d3.select('.files')
+    .selectAll('div')
+    .data(files)
+    .enter()
+    .append('div');
+
+  filesContainer.append('dt')
+    .append('code')
+    .text(d => d.name);
+
+  filesContainer.append('dd')
+    .text(d => `${d.lines.length} lines`);
+  
+  filesContainer.append('dd')
+    .selectAll('div')
+    .data(d => d.lines)
+    .enter()
+    .append('div')
+    .attr('class', 'line')
+    .style('background', d => fileTypeColors(d.type));
+}
+
+// Second scrollytelling for longest lines
+function setupLongestLineScrollytelling() {
+  const scrollContainer2 = document.getElementById('scroll-container-2');
+  const itemsContainer2 = document.getElementById('items-container-2');
+  const spacer2 = document.getElementById('spacer-2');
+  
+  if (!scrollContainer2 || !itemsContainer2 || !spacer2) return;
+  
+  const lineColor = d3.scaleOrdinal(d3.schemeTableau10);
+  const ITEM_HEIGHT_2 = 80;
+  
+  // Sort commits by longest line length
+  const scrollyLongestData = [...commits].sort((a, b) => a.longestLine - b.longestLine);
+  scrollyLongestData.forEach((c, i) => c._indexLongest = i);
+  
+  spacer2.style.height = `${scrollyLongestData.length * ITEM_HEIGHT_2}px`;
+  
+  function renderItemsLongestLine() {
+    const scrollTop = scrollContainer2.scrollTop;
+    const containerHeight = scrollContainer2.clientHeight;
+    
+    // Calculate visible range
+    const startIndex = Math.floor(scrollTop / ITEM_HEIGHT_2);
+    const endIndex = Math.min(startIndex + Math.ceil(containerHeight / ITEM_HEIGHT_2) + 1, scrollyLongestData.length);
+    const visibleCommits = scrollyLongestData.slice(startIndex, endIndex);
+    
+    // Clear and render items
+    itemsContainer2.innerHTML = '';
+    
+    visibleCommits.forEach(commit => {
+      const item = document.createElement('div');
+      item.className = 'item-longest';
+      item.style.top = `${commit._indexLongest * ITEM_HEIGHT_2}px`;
+      
+      const dateStr = commit.datetime.toLocaleString('en', { dateStyle: 'full', timeStyle: 'short' });
+      item.innerHTML = `
+        <div>
+          <strong>${dateStr}</strong>
+          <a href="${commit.url}" target="_blank">Open Commit</a>
+        </div>
+        <div>
+          This commit's <strong>longest line</strong> was
+          <em>${commit.longestLine} characters</em>!
+          The author <em>${commit.author}</em> wrote a record-breaking line.
+        </div>
+      `;
+      
+      itemsContainer2.appendChild(item);
+    });
+    
+    // Update file list based on scroll position
+    const centerIndex = Math.round((scrollTop + containerHeight / 2) / ITEM_HEIGHT_2);
+    const clampedIndex = Math.max(0, Math.min(scrollyLongestData.length - 1, centerIndex));
+    const currentCommit = scrollyLongestData[clampedIndex];
+    const filteredLongest = commits.filter(d => d.longestLine <= currentCommit.longestLine);
+    updateFileListLongest(filteredLongest);
+  }
+  
+  scrollContainer2.addEventListener('scroll', renderItemsLongestLine);
+  renderItemsLongestLine();
+}
+
+function updateFileListLongest(filteredCommits) {
+  const lineColor = d3.scaleOrdinal(d3.schemeTableau10);
+  const lines = filteredCommits.flatMap(d => d.lines);
+  const fileGroups = d3.groups(lines, d => d.file);
+  const filesData = fileGroups.map(([file, lines]) => ({ file, lines }));
+  filesData.sort((a, b) => d3.descending(a.lines.length, b.lines.length));
+  
+  const filesLongestContainer = d3.select('#files-longest');
+  if (filesLongestContainer.empty()) return;
+  
+  filesLongestContainer.html('');
+  
+  filesLongestContainer
+    .selectAll('dl')
+    .data(filesData, d => d.file)
+    .join('dl')
+    .each(function(d) {
+      const sel = d3.select(this);
+      sel.append('dt').html(`
+        <code>${d.file}</code>
+        <small>${d.lines.length} lines</small>
+      `);
+      const dd = sel.append('dd');
+      dd.selectAll('div.line')
+        .data(d.lines)
+        .join('div')
+        .attr('class', 'line')
+        .style('background', line => lineColor(line.type));
+    });
+}
+
 // Make initialization function accessible globally
 async function initVisualization() {
   // Prevent duplicate initialization
@@ -943,6 +1361,10 @@ async function initVisualization() {
     
     // Setup scrollytelling if container exists
     setupScrollytelling();
+    
+    // Setup virtual scrolling if containers exist
+    setupVirtualScrolling();
+    setupLongestLineScrollytelling();
     
     // Mark as initialized
     isInitialized = true;
