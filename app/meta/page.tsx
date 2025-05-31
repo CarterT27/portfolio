@@ -27,10 +27,10 @@ export default async function MetaPage() {
     <main className="min-h-screen bg-background text-foreground">
       <MetaNavbar />
       <div className="container mx-auto px-4 py-16 pt-24">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">Meta</h1>
           <p className="text-xl text-muted-foreground mb-8">
-            This page includes stats about the code of the website.
+            This page includes visualizations about the code of this website.
           </p>
           
           {/* We'll wrap everything in a client component */}
@@ -43,14 +43,35 @@ export default async function MetaPage() {
               </div>
             )}
             
-            {/* D3 stats and chart containers */}
+            {/* Stats section */}
             <div id="stats" className="mb-8"></div>
-            <div id="chart" className="mb-8"></div>
-            <div id="selection-count" className="mb-2"></div>
-            <dl id="language-breakdown" className="mb-8"></dl>
             
-            {/* Tooltip for commit info */}
-            <div id="commit-tooltip" hidden></div>
+            {/* Commits by time of day section */}
+            <h2 className="text-2xl font-semibold mb-4">Commits by time of day</h2>
+            
+            {/* Scrollytelling section for commits */}
+            <div id="scrolly-1" className="mb-8">
+              <div id="scatter-story"></div>
+              <div id="scatter-plot">
+                <div id="chart"></div>
+                
+                {/* Commit tooltip */}
+                <div id="commit-tooltip" className="info tooltip" hidden>
+                  {/* Tooltip content will be populated by JavaScript */}
+                </div>
+                
+                {/* Selection count and language breakdown */}
+                <p id="selection-count" className="mb-2">No commits selected</p>
+                <dl id="language-breakdown" className="stats mb-8"></dl>
+              </div>
+            </div>
+            
+            {/* Files section header */}
+            <h2 className="text-2xl font-semibold mb-4">Files by size</h2>
+            
+            {/* Unit visualization for files */}
+            <dl id="files" className="mb-8"></dl>
+            
           </VisualizationWrapper>
         </div>
       </div>
