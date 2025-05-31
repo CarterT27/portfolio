@@ -46,14 +46,16 @@ function addStylesheet() {
     .stats dt {
       font-weight: bold;
       margin-bottom: 0.3em;
+      color: hsl(var(--muted-foreground));
     }
     .stats dd {
       margin-bottom: 1em;
       font-size: 1.2em;
+      color: hsl(var(--foreground));
     }
     #chart svg circle {
-      fill: #3b82f6;
-      stroke: #1e40af;
+      fill: hsl(var(--primary));
+      stroke: hsl(var(--primary));
       stroke-width: 1px;
       transition: fill-opacity 0.2s;
       cursor: pointer;
@@ -62,26 +64,26 @@ function addStylesheet() {
       stroke-width: 2px;
     }
     .selected {
-      stroke: #f59e0b !important;
+      stroke: hsl(var(--ring)) !important;
       stroke-width: 2px !important;
     }
     .gridlines line {
-      stroke: #e5e7eb;
+      stroke: hsl(var(--border));
       stroke-opacity: 0.2;
     }
     .brush-container .selection {
-      stroke: #f59e0b;
-      fill: #f59e0b;
+      stroke: hsl(var(--ring));
+      fill: hsl(var(--ring));
       fill-opacity: 0.1;
     }
     #commit-tooltip {
-      background-color: #1e293b;
-      color: #f8fafc;
+      background-color: hsl(var(--popover));
+      color: hsl(var(--popover-foreground));
       border-radius: 6px;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       padding: 12px;
       font-size: 0.9em;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid hsl(var(--border));
       max-width: 300px;
       opacity: 0;
       transition: opacity 0.15s;
@@ -91,7 +93,7 @@ function addStylesheet() {
       opacity: 1;
     }
     #commit-tooltip a {
-      color: #60a5fa;
+      color: hsl(var(--primary));
       text-decoration: none;
       display: flex;
       align-items: center;
@@ -99,16 +101,14 @@ function addStylesheet() {
       max-width: 100%;
       padding: 8px 12px;
       border-radius: 4px;
-      border: 1px solid rgba(96, 165, 250, 0.3);
+      border: 1px solid hsl(var(--border));
       margin-bottom: 12px;
-      background-color: rgba(96, 165, 250, 0.1);
+      background-color: hsl(var(--muted));
       cursor: pointer;
       transition: all 0.15s ease;
     }
     #commit-tooltip a:hover {
-      color: #93c5fd;
-      background-color: rgba(96, 165, 250, 0.2);
-      border-color: rgba(96, 165, 250, 0.5);
+      background-color: hsl(var(--accent));
       transform: translateY(-1px);
     }
     .commit-hash {
@@ -124,7 +124,7 @@ function addStylesheet() {
       margin-left: 8px;
     }
     .commit-info {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid hsl(var(--border));
       padding-top: 8px;
     }
     .commit-row {
@@ -135,18 +135,19 @@ function addStylesheet() {
     }
     .commit-row span:first-child {
       font-weight: bold;
-      color: #a5b4fc;
+      color: hsl(var(--muted-foreground));
     }
     .commit-action {
       margin-top: 8px;
       font-size: 0.8em;
       text-align: center;
-      color: #93c5fd;
+      color: hsl(var(--muted-foreground));
       font-style: italic;
     }
     #selection-count {
       font-weight: bold;
       margin-top: 1em;
+      color: hsl(var(--foreground));
     }
     #language-breakdown {
       display: grid;
@@ -155,6 +156,10 @@ function addStylesheet() {
     }
     #language-breakdown dt {
       font-weight: bold;
+      color: hsl(var(--foreground));
+    }
+    #language-breakdown dd {
+      color: hsl(var(--muted-foreground));
     }
     
     /* Time slider styles */
@@ -164,9 +169,9 @@ function addStylesheet() {
       gap: 1rem;
       margin-bottom: 2rem;
       padding: 1rem;
-      background: #f8fafc;
+      background: hsl(var(--muted));
       border-radius: 8px;
-      border: 1px solid #e2e8f0;
+      border: 1px solid hsl(var(--border));
     }
     
     #time-controls label {
@@ -174,6 +179,7 @@ function addStylesheet() {
       align-items: center;
       gap: 1rem;
       font-weight: 500;
+      color: hsl(var(--foreground));
     }
     
     #commit-progress {
@@ -185,7 +191,7 @@ function addStylesheet() {
       margin-left: auto;
       font-family: monospace;
       font-weight: bold;
-      color: #475569;
+      color: hsl(var(--foreground));
     }
     
     /* Unit visualization styles */
@@ -207,6 +213,7 @@ function addStylesheet() {
     #files dt {
       font-weight: bold;
       padding-top: 0.6em;
+      color: hsl(var(--foreground));
     }
     
     #files dd {
@@ -246,18 +253,20 @@ function addStylesheet() {
     .step {
       margin-bottom: 2rem;
       padding: 2rem;
-      background: #f8fafc;
+      background: hsl(var(--muted));
       border-radius: 8px;
-      border-left: 4px solid #3b82f6;
+      border-left: 4px solid hsl(var(--primary));
+      color: hsl(var(--foreground));
     }
     
     /* Virtual scrolling styles */
     #scroll-container, #scroll-container-2 {
       height: 400px;
       overflow-y: auto;
-      border: 1px solid #e2e8f0;
+      border: 1px solid hsl(var(--border));
       border-radius: 8px;
       position: relative;
+      background: hsl(var(--background));
     }
     
     #items-container, #items-container-2 {
@@ -268,9 +277,10 @@ function addStylesheet() {
       position: absolute;
       width: 100%;
       padding: 1rem;
-      border-bottom: 1px solid #e2e8f0;
-      background: white;
+      border-bottom: 1px solid hsl(var(--border));
+      background: hsl(var(--background));
       box-sizing: border-box;
+      color: hsl(var(--foreground));
     }
     
     .item p, .item-longest div {
@@ -279,7 +289,7 @@ function addStylesheet() {
     }
     
     .item a, .item-longest a {
-      color: #3b82f6;
+      color: hsl(var(--primary));
       text-decoration: none;
     }
     
@@ -301,6 +311,7 @@ function addStylesheet() {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: hsl(var(--foreground));
     }
     
     #files-longest dd {
@@ -309,14 +320,15 @@ function addStylesheet() {
     }
     
     #files-longest code {
-      background: #f1f5f9;
+      background: hsl(var(--muted));
       padding: 0.25rem 0.5rem;
       border-radius: 4px;
       font-family: monospace;
+      color: hsl(var(--foreground));
     }
     
     #files-longest small {
-      color: #64748b;
+      color: hsl(var(--muted-foreground));
       font-size: 0.875rem;
     }
     
@@ -334,8 +346,9 @@ function addStylesheet() {
       width: 95%;
       height: 350px;
       overflow-y: scroll;
-      border: 1px solid #ccc;
+      border: 1px solid hsl(var(--border));
       margin-bottom: 50px;
+      background: hsl(var(--background));
     }
 
     #chart {
@@ -362,7 +375,9 @@ function addStylesheet() {
       height: 100px;
       padding: 10px;
       box-sizing: border-box;
-      border-bottom: 2px solid #eee;
+      border-bottom: 2px solid hsl(var(--border));
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
     }
 
     #scrollytelling-2 {
@@ -370,15 +385,17 @@ function addStylesheet() {
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
       margin-top: 2rem;
-      border: 1px solid #ccc;
+      border: 1px solid hsl(var(--border));
       padding: 1rem;
+      background: hsl(var(--background));
     }
 
     #scroll-container-2 {
       height: 80vh;
       overflow-y: scroll;
       position: relative;
-      border: 1px solid #ccc;
+      border: 1px solid hsl(var(--border));
+      background: hsl(var(--background));
     }
 
     #spacer-2 {
@@ -401,18 +418,21 @@ function addStylesheet() {
       position: absolute;
       width: 90%;
       margin: 0 auto;
-      background: #f5f5f5;
-      border: 2px solid #eee;
+      background: hsl(var(--muted));
+      border: 2px solid hsl(var(--border));
       box-sizing: border-box;
       padding: 0.5em;
       border-radius: 4px;
+      color: hsl(var(--foreground));
     }
 
     #files-longest {
-      border: 1px solid #ccc;
+      border: 1px solid hsl(var(--border));
       padding: 0.5rem;
       overflow-y: auto;
       max-height: 80vh;
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
     }
 
     .files {

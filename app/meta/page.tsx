@@ -47,8 +47,9 @@ export default async function MetaPage() {
             width: 95%;
             height: 350px;
             overflow-y: scroll;
-            border: 1px solid #ccc;
+            border: 1px solid hsl(var(--border));
             margin-bottom: 50px;
+            background: hsl(var(--background));
           }
 
           #chart {
@@ -75,9 +76,11 @@ export default async function MetaPage() {
             height: 100px;
             padding: 10px;
             box-sizing: border-box;
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid hsl(var(--border));
             position: absolute;
             width: 100%;
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
           }
 
           #scrollytelling-2 {
@@ -85,15 +88,17 @@ export default async function MetaPage() {
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
             margin-top: 2rem;
-            border: 1px solid #ccc;
+            border: 1px solid hsl(var(--border));
             padding: 1rem;
+            background: hsl(var(--background));
           }
 
           #scroll-container-2 {
             height: 80vh;
             overflow-y: scroll;
             position: relative;
-            border: 1px solid #ccc;
+            border: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
           }
 
           #spacer-2 {
@@ -116,18 +121,21 @@ export default async function MetaPage() {
             position: absolute;
             width: 90%;
             margin: 0 auto;
-            background: #f5f5f5;
-            border: 2px solid #eee;
+            background: hsl(var(--muted));
+            border: 2px solid hsl(var(--border));
             box-sizing: border-box;
             padding: 0.5em;
             border-radius: 4px;
+            color: hsl(var(--foreground));
           }
 
           #files-longest {
-            border: 1px solid #ccc;
+            border: 1px solid hsl(var(--border));
             padding: 0.5rem;
             overflow-y: auto;
             max-height: 80vh;
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
           }
 
           .files {
@@ -171,7 +179,7 @@ export default async function MetaPage() {
 
           dl.info dt {
             font-weight: bold;
-            color: #666;
+            color: hsl(var(--muted-foreground));
             text-transform: uppercase;
           }
 
@@ -191,7 +199,7 @@ export default async function MetaPage() {
 
           #stats dt {
             font-size: 0.9em;
-            color: #666;
+            color: hsl(var(--muted-foreground));
             font-weight: bold;
             text-transform: uppercase;
             grid-row: 1;
@@ -203,6 +211,7 @@ export default async function MetaPage() {
             margin: 0;
             grid-row: 2;
             text-align: left;
+            color: hsl(var(--foreground));
           }
         `
       }} />
