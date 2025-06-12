@@ -33,7 +33,7 @@ export default function Footer() {
             </a>
           </Button>
 
-          <Button variant="ghost" size="icon" asChild>
+          {/* <Button variant="ghost" size="icon" asChild>
             <a
               href="/meta"
               aria-label="Website Meta"
@@ -41,7 +41,7 @@ export default function Footer() {
             >
               <FontAwesomeIcon icon={faChartLine} className="h-6 w-6" />
             </a>
-          </Button>
+          </Button> */}
         </div>
 
         <p className="text-sm text-muted-foreground mt-4">
