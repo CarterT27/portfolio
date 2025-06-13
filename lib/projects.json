@@ -27,6 +27,24 @@
     "image": "/logos/automl.png"
   },
   {
+    "title": "Outperforming the Index",
+    "summary": "Interactive data visualization website for equity data",
+    "description": "Developed an interactive data visualization website for equity data using Next.js, Tailwind CSS, and D3.js.",
+    "tags": ["Next.js", "Tailwind CSS", "D3.js", "2025"],
+    "github": "https://github.com/CarterT27/outperforming-the-index",
+    "live": "http://cartert27.github.io/outperforming-the-index/",
+    "image": "/logos/outperforming-the-index.png"
+  },
+  {
+    "title": "Bikewatching",
+    "summary": "Interactive data visualization website for bike data",
+    "description": "Developed an interactive data visualization website for bike data using Mapbox, D3.js, and GIS data.",
+    "tags": ["D3.js", "Mapbox", "GIS", "2025"],
+    "github": "https://github.com/CarterT27/bikewatching",
+    "live": "https://cartertran.com/bikewatching/",
+    "image": "/logos/bikewatching.png"
+  },
+  {
     "title": "Tennis Match Prediction",
     "summary": "Data engineering pipeline for ATP Tour tennis match prediction",
     "description": "Developed vectorized and event-driven backtesting frameworks for tennis matches and odds. Asynchronously scraped data with playwright and reverse-engineered tennis websites to optimize bandwidth usage.",
