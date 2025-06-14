@@ -74,7 +74,7 @@ export default function Avatar() {
   const { avatarState } = useAvatarContext()
   const { resolvedTheme } = useTheme()
   const [bobPosition, setBobPosition] = useState(0)
-  const [backgroundUrl, setBackgroundUrl] = useState<string>('/avatar/geisel.png') // Default to a static image for SSR
+  const [backgroundUrl, setBackgroundUrl] = useState<string>('/avatar/geisel_day.png') // Default to day variant for SSR
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
   const [forcedTimeVariant, setForcedTimeVariant] = useState<'day' | 'night' | 'sunrise_sunset' | undefined>(undefined)
   const [bounceLayers, setBounceLayers] = useState<Record<number, boolean>>({})

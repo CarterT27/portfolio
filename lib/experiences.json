@@ -20,6 +20,7 @@
     "description": "Fine-tune foundational EEG Transformer model for real-time seizure detection and discover quantitative biomarkers using EEG and EMG data.",
     "url": "https://neurosciences.ucsd.edu/research/labs/ung/index.html#",
     "avatar_state": {
+      "background": "geisel.png",
       "layers": [
         { "image": "brain.png", "zIndex": 10, "width": 100, "height": 100, "x": 0, "y": 0, "bounce": false }
       ]
@@ -32,6 +33,7 @@
     "description": "Research, implement, and backtest equity trading strategies for potential portfolio integration. National Finalist in International Quant Championship 2024.",
     "url": "https://worldquant.com",
     "avatar_state": {
+      "background": "geisel.png",
       "layers": [
         { "image": "candlesticks.png", "zIndex": 10, "width": 192, "height": 192, "x": 0, "y": 0, "bounce": false }
       ]
