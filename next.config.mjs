@@ -54,10 +54,12 @@ if (userConfig) {
 // Run preprocessCommitData during build
 const nextConfigWithBuildHook = {
   ...nextConfig,
-  onBuildStart: async () => {
-    console.log('Preprocessing commit data for build...');
-    await preprocessCommitData();
-    console.log('Commit data preprocessing complete');
+  webpack: (config, { isServer, dev }) => {
+    // Run preprocessCommitData before webpack compilation
+    if (!dev) {
+      preprocessCommitData().catch(console.error);
+    }
+    return config;
   }
 }
 
