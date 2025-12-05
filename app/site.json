@@ -1,4 +1,7 @@
 {
   "title": "Carter Tran - Student and Developer",
-  "description": "Software Developer from the United States."
+  "description": "Software Developer from the United States.",
+  "icons": {
+    "icon": "/icon.svg"
+  }
 }
