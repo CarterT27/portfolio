@@ -1,7 +1,8 @@
 {
-  "name": "my-v0-project",
+  "name": "cartertran-portfolio",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "bun@1.1.38",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
