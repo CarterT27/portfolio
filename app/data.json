@@ -1,0 +1,169 @@
+{
+  "name": "Carter Tran",
+  "intro": {
+    "subtitle": "PORTFOLIO",
+    "description": "Developer building at the intersection of **machine learning**, **software engineering**, and **mathematics**.",
+    "status": "Always looking for new opportunities",
+    "location": "Chicago"
+  },
+  "current": {
+    "role": "Research",
+    "company": "@ Fermilab",
+    "period": "Sep. 2025 - Present"
+  },
+  "focus": ["Machine Learning", "Artificial Intelligence", "Scientific Computing", "Python"],
+  "work": [
+    {
+      "year": "2025",
+      "role": "Research Assistant",
+      "company": "Fermilab | Toyota Technical Institute | University of Chicago",
+      "description": "Working on machine learning and reinforcement learning algorithms for control systems and particle physics.",
+      "tech": ["Machine Learning", "Reinforcement Learning", "Python"],
+      "enabled": true
+    },
+    {
+      "year": "2025",
+      "role": "Quantitative Analyst, Technical Lead",
+      "company": "Paragon Global Investments",
+      "description": "Prediction market trading strategies and the website/member portal.",
+      "tech": ["Quantitative Finance", "Web Development"],
+      "enabled": true
+    },
+    {
+      "year": "2025",
+      "role": "Software Development Engineer Intern",
+      "company": "Amazon",
+      "description": "Worked in Amazon Prime - Membership Growth. Learned a lot about AWS and scalable systems.",
+      "tech": ["AWS", "Distributed Systems", "Java", "Typescript"],
+      "enabled": true
+    },
+    {
+      "year": "2025",
+      "role": "Teaching Assistant",
+      "company": "University of Chicago",
+      "description": "Teaching assistant for DATA 27100/27200: Data Science Clinic",
+      "tech": ["Python", "Data Science", "Teaching"],
+      "enabled": true
+    },
+    {
+      "year": "2024",
+      "role": "Machine Learning Researcher",
+      "company": "Translational Neurophysiology Lab | UC San Diego Health",
+      "description": "Fine-tuned foundational EEG Transformer model for real-time seizure detection and discovered quantitative biomarkers using EEG and EMG data.",
+      "tech": ["Machine Learning", "Deep Learning", "Python"],
+      "enabled": true
+    },
+    {
+      "year": "2024",
+      "role": "Quantitative Research Consultant",
+      "company": "WorldQuant",
+      "description": "Researched, implemented, and backtested equity trading strategies for potential portfolio integration. National Finalist in International Quant Championship 2024.",
+      "tech": ["Quantitative Finance", "Python", "Backtesting"],
+      "enabled": false
+    },
+    {
+      "year": "2024",
+      "role": "Teaching Assistant",
+      "company": "UC San Diego",
+      "description": "Tutor for DSC 20: Programming and Data Structures (Python), DSC 30: Data Structures and Algorithms (Java).",
+      "tech": ["Python", "Java", "Teaching"],
+      "enabled": true
+    },
+    {
+      "year": "2023",
+      "role": "VP of Machine Learning",
+      "company": "Triton Quantitative Trading",
+      "description": "Led machine learning initiatives, winning multiple trading competitions.",
+      "tech": ["Machine Learning", "Quantitative Finance"],
+      "enabled": true
+    },
+    {
+      "year": "2022",
+      "role": "Data Analytics Intern",
+      "company": "Nationwide Pet",
+      "description": "Analyzed claims data to improve the standard of care for our furry friends.",
+      "tech": ["Data Analysis", "Python", "SQL"],
+      "enabled": true
+    }
+  ],
+  "projects": [
+    {
+      "title": "IMC Prosperity 3",
+      "description": "Developed algorithmic trading strategies for IMC's Prosperity 3 competition, placing **9th globally** and **2nd in the USA** with a peak ranking of **2nd globally**. Implemented various strategies including **market making**, **statistical arbitrage**, and **options pricing** with Black-Scholes model.",
+      "tech": ["Python", "Algorithmic Trading", "Statistical Arbitrage", "Options Pricing"],
+      "link": "https://github.com/CarterT27/imc-prosperity-3",
+      "enabled": true
+    },
+    {
+      "title": "Algorithmic Trading Bot",
+      "description": "Engineered features with **TA-Lib** and **scipy** for quantitative data, **NLTK** and **spaCy** for sentiment analysis. Developed trading strategies on **QuantConnect** with scikit-learn and XGBoost for performance improvement.",
+      "tech": ["Python", "C#", "Quantitative Finance", "Machine Learning"],
+      "link": "#",
+      "enabled": false
+    },
+    {
+      "title": "FASTER",
+      "description": "Automated an **ETL pipeline** with OpenRouter API for integrating **LLM domain knowledge** into the **AutoML paradigm**. Validated performance of generated features using XGBoost and scikit-learn models across **3 benchmark datasets**.",
+      "tech": ["Python", "Large Language Models", "AutoML", "ETL"],
+      "link": "https://github.com/CarterT27/FASTER",
+      "enabled": true
+    },
+    {
+      "title": "Outperforming the Index",
+      "description": "Developed an **interactive data visualization** website for equity data using Next.js, Tailwind CSS, and D3.js.",
+      "tech": ["Next.js", "Tailwind CSS", "D3.js"],
+      "link": "http://cartert27.github.io/outperforming-the-index/",
+      "enabled": true
+    },
+    {
+      "title": "Bikewatching",
+      "description": "Developed an **interactive data visualization** website for bike data using Mapbox, D3.js, and GIS data.",
+      "tech": ["D3.js", "Mapbox", "GIS"],
+      "link": "https://cartertran.com/bikewatching/",
+      "enabled": true
+    },
+    {
+      "title": "Tennis Match Prediction",
+      "description": "Developed **vectorized** and **event-driven backtesting frameworks** for tennis matches and odds. **Asynchronously scraped data** with playwright and reverse-engineered tennis websites to **optimize bandwidth usage**.",
+      "tech": ["Python", "Data Engineering", "Web Scraping", "Playwright"],
+      "link": "",
+      "enabled": false
+    },
+    {
+      "title": "Social Media Question-Answering",
+      "description": "Engineered database of social media content across **Twitter** and **Youtube**, enabling **advanced search** and **question-answering**. Implemented transcription with **OpenAI Whisper** and **topic modeling** with BERTopic to extract key themes across influencers.",
+      "tech": ["Large Language Models", "Topic Modeling", "Question-Answering", "D3.js"],
+      "link": "",
+      "enabled": false
+    },
+    {
+      "title": "txtTutor",
+      "description": "Developed a **RAG-based application** using OpenAI APIs and **custom vector search database**. Utilized Heroku for hosting, deployment, and scaling to support **100+ monthly users**.",
+      "tech": ["Python", "Large Language Models", "RAG", "Heroku"],
+      "link": "",
+      "enabled": true
+    },
+    {
+      "title": "AI Health Insights",
+      "description": "Utilized dask to process and analyze **millions of rows** of Apple Watch health data, identifying key underperforming metrics. Developed health insight generation pipelines leveraging **Claude** and **fine-tuned HuggingFace Large Language Models**.",
+      "tech": ["Python", "Natural Language Processing", "Big Data", "Dask"],
+      "link": "https://github.com/CarterT27/Apple-Watch-Personalized-Health-Insights",
+      "enabled": false
+    }
+  ],
+  "thoughts": [
+  ],
+  "connect": {
+    "title": "Let's Connect",
+    "description": "Always interested in new opportunities, collaborations, and conversations about technology and design.",
+    "email": "contact@cartertran.com",
+    "socials": [
+      { "name": "GitHub", "handle": "@cartert27", "url": "https://github.com/CarterT27" },
+      { "name": "LinkedIn", "handle": "cartertran", "url": "https://www.linkedin.com/in/cartertran/" }
+    ]
+  },
+  "footer": {
+    "copyright": "Carter Tran. All rights reserved.",
+    "builtWith": "Built with ❤️ using Bun"
+  }
+}
