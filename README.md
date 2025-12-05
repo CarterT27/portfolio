@@ -8,7 +8,7 @@
 
 ## 📦 Getting Started
 
-\`\`\`bash
+```bash
 # Clone the repository
 git clone https://github.com/CarterT27/portfolio
 
@@ -17,6 +17,6 @@ bun install
 
 # Run development server
 bun dev
-\`\`\`
+```
 
 Open [http://localhost:3000](http://localhost:3000) to view the portfolio.
