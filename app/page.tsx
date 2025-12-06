@@ -98,7 +98,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">
-      <div className="fixed inset-0 hidden lg:flex items-center justify-center pointer-events-none z-0 opacity-[0.03]">
+      <div className="fixed inset-0 hidden lg:flex items-center justify-center pointer-events-none z-0 opacity-[0.09]">
         <MagnetLines
           rows={9}
           columns={9}
