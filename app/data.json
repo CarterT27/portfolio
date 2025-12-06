@@ -27,7 +27,7 @@
       "company": "Paragon Global Investments",
       "description": "Prediction market trading strategies and the website/member portal.",
       "tech": ["Quantitative Finance", "Web Development"],
-      "enabled": true
+      "enabled": false
     },
     {
       "year": "2025",
@@ -120,6 +120,13 @@
       "description": "Developed an **interactive data visualization** website for bike data using Mapbox, D3.js, and GIS data.",
       "tech": ["D3.js", "Mapbox", "GIS"],
       "link": "https://cartertran.com/bikewatching/",
+      "enabled": true
+    },
+    {
+      "title": "F1 Traffic Cameras",
+      "description": "Created a web viewer for traffic cameras around the Vegas GP circuit.",
+      "tech": ["Next.js", "GIS", "Video Streaming"],
+      "link": "https://tracktraffic.cam/",
       "enabled": true
     },
     {
