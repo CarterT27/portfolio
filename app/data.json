@@ -16,7 +16,7 @@
     {
       "year": "2025",
       "role": "Research Assistant",
-      "company": "Fermilab | Toyota Technical Institute | University of Chicago",
+      "company": "Fermilab",
       "description": "Working on machine learning and reinforcement learning algorithms for control systems and particle physics.",
       "tech": ["Machine Learning", "Reinforcement Learning", "Python"],
       "enabled": true
@@ -48,7 +48,7 @@
     {
       "year": "2024",
       "role": "Machine Learning Researcher",
-      "company": "Translational Neurophysiology Lab | UC San Diego Health",
+      "company": "UC San Diego Health",
       "description": "Fine-tuned foundational EEG Transformer model for real-time seizure detection and discovered quantitative biomarkers using EEG and EMG data.",
       "tech": ["Machine Learning", "Deep Learning", "Python"],
       "enabled": true
