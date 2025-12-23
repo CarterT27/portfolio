@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Script from "next/script"
 import { useEffect, useRef, useState } from "react"
 import { useTheme } from "next-themes"
 import data from "./data.json"
@@ -98,6 +99,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">
+      <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="lazyOnload" />
+      <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
       <div className="fixed inset-0 hidden lg:flex items-center justify-center pointer-events-none z-0 opacity-[0.09]">
         <MagnetLines
           rows={9}
@@ -116,7 +119,7 @@ export default function Home() {
             <button
               key={section}
               onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
-              className={`w-2 h-8 rounded-full transition-all duration-500 ${
+              className={`w-2 h-8 rounded-full transition-all duration-500 cursor-pointer ${
                 activeSection === section ? "bg-foreground" : "bg-muted-foreground/30 hover:bg-muted-foreground/60"
               }`}
               aria-label={`Navigate to ${section}`}
@@ -313,7 +316,7 @@ export default function Home() {
               <div className="flex flex-col items-center gap-2 pt-4">
                 <button
                   onClick={loadMoreProjects}
-                  className="group w-12 h-12 rounded-full border border-border hover:border-muted-foreground/50 transition-all duration-500 flex items-center justify-center hover:shadow-lg"
+                  className="group w-12 h-12 rounded-full border border-border hover:border-muted-foreground/50 transition-all duration-500 flex items-center justify-center hover:shadow-lg cursor-pointer"
                   aria-label="Load more projects"
                 >
                   <svg
@@ -402,20 +405,60 @@ export default function Home() {
                   {parseMarkdownBold(data.connect.description)}
                 </p>
 
-                <div className="space-y-4">
+                <div className="grid sm:grid-cols-2 gap-4">
                   <button
                     onClick={() => setShowFeedbackForm(true)}
-                    className="group flex items-center gap-3 text-foreground hover:text-muted-foreground transition-colors duration-300"
+                    className="group flex flex-col items-start p-5 border border-border rounded-lg hover:border-muted-foreground/30 hover:bg-muted/5 transition-all duration-300 text-left cursor-pointer"
                   >
-                    <span className="text-base sm:text-lg">Send me a message</span>
-                    <svg
-                      className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
+                    <div className="mb-4 text-muted-foreground group-hover:text-foreground transition-colors">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-base font-medium">Send me a message</div>
+                      <div className="text-xs text-muted-foreground line-clamp-1">Feedback/Questions</div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      // @ts-ignore
+                      window.Calendly?.initPopupWidget({
+                        url: "https://calendly.com/carter-tran/30min?hide_event_type_details=1",
+                      })
+                    }}
+                    className="group flex flex-col items-start p-5 border border-border rounded-lg hover:border-muted-foreground/30 hover:bg-muted/5 transition-all duration-300 text-left cursor-pointer"
+                  >
+                    <div className="mb-4 text-muted-foreground group-hover:text-foreground transition-colors">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-base font-medium">Schedule a meeting</div>
+                      <div className="text-xs text-muted-foreground line-clamp-1">Meeting/Consultation</div>
+                    </div>
                   </button>
                 </div>
               </div>
@@ -454,7 +497,7 @@ export default function Home() {
             <div className="flex items-center gap-4">
               <button
                 onClick={toggleTheme}
-                className="group p-3 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300"
+                className="group p-3 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300 cursor-pointer"
                 aria-label="Toggle theme"
               >
                 {mounted && theme === "dark" ? (
@@ -482,7 +525,7 @@ export default function Home() {
 
               <button
                 onClick={() => setShowFeedbackForm(true)}
-                className="group p-3 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300"
+                className="group p-3 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300 cursor-pointer"
                 aria-label="Send feedback"
               >
                 <svg
