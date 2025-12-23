@@ -166,7 +166,8 @@
     "email": "contact@cartertran.com",
     "socials": [
       { "name": "GitHub", "handle": "@cartert27", "url": "https://github.com/CarterT27" },
-      { "name": "LinkedIn", "handle": "cartertran", "url": "https://www.linkedin.com/in/cartertran/" }
+      { "name": "LinkedIn", "handle": "cartertran", "url": "https://www.linkedin.com/in/cartertran/" },
+      { "name": "X (Twitter)", "handle": "@CarterJTran", "url": "https://x.com/CarterJTran" }
     ]
   },
   "footer": {
