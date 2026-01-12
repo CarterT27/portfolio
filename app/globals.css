@@ -136,3 +136,88 @@
     }
   }
 }
+
+/* Blog / MDX Styles */
+@layer components {
+  /* Code block styling */
+  .prose-custom pre {
+    @apply overflow-x-auto rounded-lg p-4 mb-6 text-sm border border-border bg-muted/30;
+  }
+
+  .prose-custom pre code {
+    @apply text-sm;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  /* Inline code */
+  .prose-custom :not(pre) > code {
+    @apply px-1.5 py-0.5 rounded bg-muted text-foreground text-sm font-mono;
+  }
+
+  /* rehype-pretty-code styling */
+  .prose-custom [data-rehype-pretty-code-figure] {
+    @apply my-6 relative;
+  }
+
+  .prose-custom [data-rehype-pretty-code-figure] pre {
+    @apply overflow-x-auto rounded-lg border border-border bg-muted/30 p-4;
+  }
+
+  .prose-custom [data-rehype-pretty-code-figure] > div {
+    @apply relative;
+  }
+
+  .prose-custom [data-rehype-pretty-code-figure] code {
+    @apply text-sm;
+  }
+
+  .prose-custom [data-rehype-pretty-code-figure] code > [data-line] {
+    @apply px-0;
+  }
+
+  /* Highlighted lines */
+  .prose-custom [data-rehype-pretty-code-figure] [data-highlighted-line] {
+    @apply bg-muted/50;
+  }
+
+  /* Code filename - plain text above code block */
+  .prose-custom [data-rehype-pretty-code-title] {
+    @apply text-xs font-mono text-muted-foreground mb-2;
+  }
+
+  .prose-custom [data-rehype-pretty-code-title] + pre {
+    @apply mt-0;
+  }
+}
+
+/* KaTeX Math Equation Styling */
+.katex-display {
+  @apply my-6 overflow-x-auto overflow-y-hidden py-2;
+}
+
+.katex {
+  @apply text-foreground;
+  font-size: 1.1em;
+}
+
+.katex-display > .katex {
+  @apply text-center;
+}
+
+/* Scrollbar styling for code blocks */
+.prose-custom pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.prose-custom pre::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.prose-custom pre::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full;
+}
+
+.prose-custom pre::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/40;
+}

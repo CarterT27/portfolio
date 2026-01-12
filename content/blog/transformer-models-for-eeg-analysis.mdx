@@ -1,0 +1,119 @@
+---
+title: "Fine-tuning Transformer Models for Real-time EEG Seizure Detection"
+date: "2026-01-05"
+excerpt: "Exploring how foundational EEG transformer models can be adapted for clinical seizure detection with improved latency and accuracy."
+tags: ["deep-learning", "transformers", "medical-ai", "python"]
+published: true
+---
+
+During my research at UC San Diego Health, I worked on adapting large pre-trained EEG transformer models for real-time seizure detection. This post covers the key technical challenges and solutions.
+
+## Background
+
+Epilepsy affects approximately 50 million people worldwide. Early seizure detection can significantly improve patient outcomes by enabling timely intervention. Traditional approaches rely on hand-crafted features, but transformer-based models offer a more flexible, data-driven alternative.
+
+## The Architecture
+
+We built upon the foundational EEG-Transformer architecture, which uses a modified attention mechanism suited for time-series data:
+
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}} + M\right)V
+$$
+
+where $M$ is a causal mask ensuring the model only attends to past time steps—critical for real-time inference.
+
+## Data Pipeline
+
+EEG data requires careful preprocessing:
+
+```python title="preprocess.py"
+import numpy as np
+from scipy.signal import butter, filtfilt
+
+def preprocess_eeg(raw_signal: np.ndarray, fs: int = 256) -> np.ndarray:
+    """
+    Preprocess raw EEG signal.
+
+    Args:
+        raw_signal: Raw EEG data (n_channels, n_samples)
+        fs: Sampling frequency in Hz
+
+    Returns:
+        Preprocessed signal ready for model input
+    """
+    # Bandpass filter (0.5-50 Hz)
+    b, a = butter(4, [0.5, 50], btype='band', fs=fs)
+    filtered = filtfilt(b, a, raw_signal, axis=1)
+
+    # Normalize per channel
+    normalized = (filtered - filtered.mean(axis=1, keepdims=True)) / \
+                 (filtered.std(axis=1, keepdims=True) + 1e-8)
+
+    return normalized
+```
+
+## Fine-tuning Strategy
+
+<Callout type="warning" title="Catastrophic Forgetting">
+  Naive fine-tuning can cause the model to forget pre-trained representations. We used discriminative learning rates and gradual unfreezing to mitigate this.
+</Callout>
+
+Our fine-tuning approach:
+
+1. **Freeze** the first 8 transformer layers
+2. **Unfreeze** layers progressively over 10 epochs
+3. Use **layer-wise learning rate decay** with factor 0.9
+
+```python
+def get_layer_lrs(model, base_lr: float = 1e-4, decay: float = 0.9):
+    """Generate per-layer learning rates."""
+    layer_lrs = []
+    num_layers = len(model.transformer_layers)
+
+    for i, layer in enumerate(model.transformer_layers):
+        lr = base_lr * (decay ** (num_layers - i))
+        layer_lrs.append({'params': layer.parameters(), 'lr': lr})
+
+    # Classification head gets full learning rate
+    layer_lrs.append({'params': model.classifier.parameters(), 'lr': base_lr})
+
+    return layer_lrs
+```
+
+## Quantitative Biomarkers
+
+Beyond classification, we discovered quantitative biomarkers in the attention patterns:
+
+| Biomarker | Ictal Period | Interictal Period | p-value |
+|-----------|-------------|-------------------|---------|
+| Alpha-band attention | 0.72 ± 0.08 | 0.45 ± 0.12 | < 0.001 |
+| Cross-channel coherence | 0.81 ± 0.05 | 0.62 ± 0.09 | < 0.001 |
+| Temporal attention span | 2.3s ± 0.4s | 1.1s ± 0.3s | < 0.001 |
+
+## Results
+
+Our fine-tuned model achieved state-of-the-art performance on the benchmark dataset:
+
+- **Sensitivity**: 94.2%
+- **Specificity**: 97.8%
+- **Latency**: 1.2 seconds (suitable for real-time use)
+
+<Callout type="success" title="Clinical Validation">
+  The model was validated on prospective data from 12 patients, maintaining >90% sensitivity with minimal false alarms.
+</Callout>
+
+## Lessons Learned
+
+1. **Pre-training matters**: Starting from a foundational model saved months of training time
+2. **Domain adaptation**: Hospital-specific fine-tuning improved performance by 8%
+3. **Inference optimization**: TensorRT quantization reduced latency by 3x
+
+## Future Directions
+
+I'm excited about extending this work to:
+
+- Multi-modal fusion (EEG + EMG)
+- Personalized models that adapt to individual patients
+- Edge deployment on wearable devices
+
+Feel free to reach out if you're working on similar problems.
