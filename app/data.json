@@ -2,7 +2,7 @@
   "name": "Carter Tran",
   "intro": {
     "subtitle": "PORTFOLIO",
-    "description": "Developer building at the intersection of **machine learning**, **software engineering**, and **mathematics**.",
+    "description": "Research Engineer working on ML systems, evaluation, and scaling.",
     "status": "Always looking for new opportunities",
     "location": "Chicago"
   },
@@ -14,16 +14,16 @@
   "focus": ["Machine Learning", "Artificial Intelligence", "Scientific Computing", "Python"],
   "work": [
     {
-      "year": "2025",
-      "role": "Research Assistant",
+      "year": "2026",
+      "role": "Research",
       "company": "Fermilab",
       "description": "Working on machine learning and reinforcement learning algorithms for control systems and particle physics.",
       "tech": ["Machine Learning", "Reinforcement Learning", "Python"],
       "enabled": true
     },
     {
-      "year": "2025",
-      "role": "Quantitative Analyst, Technical Lead",
+      "year": "2026",
+      "role": "Technical Lead",
       "company": "Paragon Global Investments",
       "description": "Prediction market trading strategies and the website/member portal.",
       "tech": ["Quantitative Finance", "Web Development"],
@@ -31,7 +31,7 @@
     },
     {
       "year": "2025",
-      "role": "Software Development Engineer Intern",
+      "role": "Software Development",
       "company": "Amazon",
       "description": "Worked in Amazon Prime - Membership Growth. Learned a lot about AWS and scalable systems.",
       "tech": ["AWS", "Distributed Systems", "Java", "Typescript"],
@@ -43,11 +43,11 @@
       "company": "University of Chicago",
       "description": "Teaching assistant for DATA 27100/27200: Data Science Clinic",
       "tech": ["Python", "Data Science", "Teaching"],
-      "enabled": true
+      "enabled": false
     },
     {
-      "year": "2024",
-      "role": "Machine Learning Researcher",
+      "year": "2025",
+      "role": "Research",
       "company": "UC San Diego Health",
       "description": "Fine-tuned foundational EEG Transformer model for real-time seizure detection and discovered quantitative biomarkers using EEG and EMG data.",
       "tech": ["Machine Learning", "Deep Learning", "Python"],
@@ -62,15 +62,15 @@
       "enabled": false
     },
     {
-      "year": "2024",
+      "year": "2025",
       "role": "Teaching Assistant",
       "company": "UC San Diego",
       "description": "Tutor for DSC 20: Programming and Data Structures (Python), DSC 30: Data Structures and Algorithms (Java).",
       "tech": ["Python", "Java", "Teaching"],
-      "enabled": true
+      "enabled": false
     },
     {
-      "year": "2023",
+      "year": "2025",
       "role": "VP of Machine Learning",
       "company": "Triton Quantitative Trading",
       "description": "Led machine learning initiatives, winning multiple trading competitions.",
@@ -83,7 +83,7 @@
       "company": "Nationwide Pet",
       "description": "Analyzed claims data to improve the standard of care for our furry friends.",
       "tech": ["Data Analysis", "Python", "SQL"],
-      "enabled": true
+      "enabled": false
     }
   ],
   "projects": [
@@ -145,7 +145,7 @@
     },
     {
       "title": "txtTutor",
-      "description": "Developed a **RAG-based application** using OpenAI APIs and **custom vector search database**. Utilized Heroku for hosting, deployment, and scaling to support **100+ monthly users**.",
+      "description": "Developed a **RAG-based application** using OpenAI APIs and **custom vector search database**. Utilized Heroku for hosting, deployment, and scaling to support **100+ monthly active users**.",
       "tech": ["Python", "Large Language Models", "RAG", "Heroku"],
       "link": "",
       "enabled": true
