@@ -50,7 +50,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-16 py-20 sm:py-32">
+      <main className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 py-20 sm:py-32">
         <article className="space-y-12">
           <header className="space-y-6">
             <Link
