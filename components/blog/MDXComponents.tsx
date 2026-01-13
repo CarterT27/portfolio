@@ -10,26 +10,22 @@ interface CalloutProps {
   children: React.ReactNode
 }
 
-const calloutStyles: Record<CalloutType, { bg: string; border: string; icon: string }> = {
+const calloutStyles: Record<CalloutType, { bg: string; border: string }> = {
   info: {
     bg: 'bg-blue-500/10',
     border: 'border-blue-500/30',
-    icon: 'ℹ️',
   },
   warning: {
     bg: 'bg-yellow-500/10',
     border: 'border-yellow-500/30',
-    icon: '⚠️',
   },
   success: {
     bg: 'bg-green-500/10',
     border: 'border-green-500/30',
-    icon: '✓',
   },
   error: {
     bg: 'bg-red-500/10',
     border: 'border-red-500/30',
-    icon: '✕',
   },
 }
 
@@ -40,13 +36,14 @@ export function Callout({ type = 'info', title, children }: CalloutProps) {
     <div
       className={`${styles.bg} ${styles.border} border rounded-lg p-4 my-6`}
     >
-      <div className="flex items-start gap-3">
-        <span className="text-lg">{styles.icon}</span>
+      <div className="flex items-start">
         <div className="flex-1">
           {title && (
             <div className="font-medium text-foreground mb-1">{title}</div>
           )}
-          <div className="text-muted-foreground text-sm">{children}</div>
+          <div className="text-muted-foreground text-sm [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">
+            {children}
+          </div>
         </div>
       </div>
     </div>
