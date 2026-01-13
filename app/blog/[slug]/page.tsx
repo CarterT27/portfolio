@@ -10,20 +10,37 @@ import { getPostBySlug, getPostSlugs, getAllPosts } from '@/lib/mdx'
 import { useMDXComponents } from '@/mdx-components'
 import Footer from '@/components/Footer'
 
+const EMPTY_SLUG = '__empty'
+
 type Props = {
-  params: Promise<{ slug: string }>
+  params: { slug: string }
 }
 
-export async function generateStaticParams() {
+export const dynamic = 'force-static'
+export const dynamicParams = false
+
+export function generateStaticParams() {
   const slugs = getPostSlugs()
+
+  if (slugs.length === 0) {
+    return [{ slug: EMPTY_SLUG }]
+  }
+
   return slugs.map((slug) => ({ slug }))
 }
 
-export async function generateMetadata({ params }: Props) {
-  const { slug } = await params
+export function generateMetadata({ params }: Props) {
+  const { slug } = params
   const post = getPostBySlug(slug)
 
   if (!post) {
+    if (getAllPosts().length === 0) {
+      return {
+        title: 'Blog | Carter Tran',
+        description: 'Research notes, experiments, and thoughts on machine learning and technology.',
+      }
+    }
+
     return { title: 'Post Not Found' }
   }
 
@@ -33,15 +50,52 @@ export async function generateMetadata({ params }: Props) {
   }
 }
 
-export default async function BlogPostPage({ params }: Props) {
-  const { slug } = await params
+export default function BlogPostPage({ params }: Props) {
+  const { slug } = params
+  const allPosts = getAllPosts()
   const post = getPostBySlug(slug)
 
   if (!post) {
+    if (allPosts.length === 0 && slug === EMPTY_SLUG) {
+      return (
+        <div className="min-h-screen bg-background text-foreground">
+          <main className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16 py-20 sm:py-32">
+            <div className="space-y-6">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+                </svg>
+                Back to blog
+              </Link>
+              <h1 className="text-3xl sm:text-4xl font-light">No posts yet</h1>
+              <p className="text-muted-foreground">
+                New writing is coming soon. Check back later for updates.
+              </p>
+            </div>
+            <div className="mt-24">
+              <Footer />
+            </div>
+          </main>
+        </div>
+      )
+    }
+
     notFound()
   }
 
-  const allPosts = getAllPosts()
   const currentIndex = allPosts.findIndex((p) => p.slug === slug)
   const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null

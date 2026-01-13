@@ -161,13 +161,13 @@
   }
 
   /* Apply theme colors */
-  .prose-custom [data-rehype-pretty-code-figure] code[data-theme*=" "],
-  .prose-custom [data-rehype-pretty-code-figure] code[data-theme*=" "] span {
+  .prose-custom [data-rehype-pretty-code-figure] code[data-theme],
+  .prose-custom [data-rehype-pretty-code-figure] code[data-theme] span {
     color: var(--shiki-light);
   }
 
-  .dark .prose-custom [data-rehype-pretty-code-figure] code[data-theme*=" "],
-  .dark .prose-custom [data-rehype-pretty-code-figure] code[data-theme*=" "] span {
+  .dark .prose-custom [data-rehype-pretty-code-figure] code[data-theme],
+  .dark .prose-custom [data-rehype-pretty-code-figure] code[data-theme] span {
     color: var(--shiki-dark);
   }
 

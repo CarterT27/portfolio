@@ -1,6 +1,5 @@
 import type { MDXComponents } from 'mdx/types'
 import { MDXImage, Callout, CodeBlock } from '@/components/blog/MDXComponents'
-import { Pre } from '@/components/blog/CopyButton'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -78,7 +77,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </td>
     ),
-    pre: Pre,
+    pre: ({ children, ...props }) => (
+      <pre
+        className="overflow-x-auto rounded-lg p-4 mb-6 text-sm bg-muted/30 border border-border"
+        {...props}
+      >
+        {children}
+      </pre>
+    ),
     code: ({ children, className, ...props }) => {
       const isInline = !className
       if (isInline) {

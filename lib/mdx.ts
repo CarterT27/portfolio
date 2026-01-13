@@ -36,7 +36,7 @@ export function getPostSlugs(): string[] {
 
   const files = fs.readdirSync(BLOG_DIR)
   return files
-    .filter((file) => file.endsWith('.mdx'))
+    .filter((file) => file.endsWith('.mdx') && !file.startsWith('_'))
     .map((file) => file.replace(/\.mdx$/, ''))
 }
 
@@ -49,6 +49,11 @@ export function getPostBySlug(slug: string): Post | null {
 
   const fileContents = fs.readFileSync(filePath, 'utf8')
   const { data, content } = matter(fileContents)
+
+  if (data.published === false) {
+    return null
+  }
+
   const stats = readingTime(content)
 
   return {
