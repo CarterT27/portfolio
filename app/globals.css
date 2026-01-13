@@ -160,6 +160,17 @@
     @apply my-6 relative;
   }
 
+  /* Apply theme colors */
+  .prose-custom [data-rehype-pretty-code-figure] code[data-theme*=" "],
+  .prose-custom [data-rehype-pretty-code-figure] code[data-theme*=" "] span {
+    color: var(--shiki-light);
+  }
+
+  .dark .prose-custom [data-rehype-pretty-code-figure] code[data-theme*=" "],
+  .dark .prose-custom [data-rehype-pretty-code-figure] code[data-theme*=" "] span {
+    color: var(--shiki-dark);
+  }
+
   .prose-custom [data-rehype-pretty-code-figure] pre {
     @apply overflow-x-auto rounded-lg border border-border bg-muted/30 p-4;
   }
