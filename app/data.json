@@ -88,6 +88,13 @@
   ],
   "projects": [
     {
+      "title": "WaitWhat",
+      "description": "Won **2 awards** at CMU's NexHacks hackathon (**1500+ builders**). AI-powered tool that helps users stay informed and engaged during conversations.",
+      "tech": ["AI", "Hackathon"],
+      "link": "https://www.waitwhat.tech/",
+      "enabled": true
+    },
+    {
       "title": "IMC Prosperity 3",
       "description": "Developed algorithmic trading strategies for IMC's Prosperity 3 competition, placing **9th globally** and **2nd in the USA** with a peak ranking of **2nd globally**. Implemented various strategies including **market making**, **statistical arbitrage**, and **options pricing** with Black-Scholes model.",
       "tech": ["Python", "Algorithmic Trading", "Statistical Arbitrage", "Options Pricing"],
