@@ -169,11 +169,11 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
 
               <div className="space-y-4 flex-1">
                 <div className="text-sm text-muted-foreground font-mono">FOCUS</div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
                   {data.focus.map((skill) => (
                     <span
                       key={skill}
-                      className="px-3 py-1.5 text-xs border border-border rounded-md hover:border-muted-foreground/50 transition-colors duration-300 w-fit"
+                      className="text-sm text-muted-foreground"
                     >
                       {skill}
                     </span>
