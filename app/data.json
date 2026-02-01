@@ -7,11 +7,11 @@
     "location": "Chicago"
   },
   "current": {
-    "role": "Research",
-    "company": "@ Fermilab",
+    "role": "Student",
+    "company": "@ UChicago",
     "period": "Sep. 2025 - Present"
   },
-  "focus": ["Machine Learning", "Artificial Intelligence", "Scientific Computing", "Python"],
+  "focus": ["Artificial Intelligence", "High Performance Computing"],
   "work": [
     {
       "year": "2026",
