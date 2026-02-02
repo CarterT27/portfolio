@@ -95,6 +95,12 @@
       "enabled": true
     },
     {
+      "title": "Jane Street Puzzles",
+      "description": "[February 2026](https://www.janestreet.com/puzzles/subtiles-2-index/) (Top 10), [December 2025](https://www.janestreet.com/puzzles/robot-javelin-index/)",
+      "tech": ["Problem Solving"],
+      "enabled": true
+    },
+    {
       "title": "IMC Prosperity 3",
       "description": "Developed algorithmic trading strategies for IMC's Prosperity 3 competition, placing **9th globally** and **2nd in the USA** with a peak ranking of **2nd globally**. Implemented various strategies including **market making**, **statistical arbitrage**, and **options pricing** with Black-Scholes model.",
       "tech": ["Python", "Algorithmic Trading", "Statistical Arbitrage", "Options Pricing"],
@@ -113,7 +119,7 @@
       "description": "Automated an **ETL pipeline** with OpenRouter API for integrating **LLM domain knowledge** into the **AutoML paradigm**. Validated performance of generated features using XGBoost and scikit-learn models across **3 benchmark datasets**.",
       "tech": ["Python", "Large Language Models", "AutoML", "ETL"],
       "link": "https://github.com/CarterT27/FASTER",
-      "enabled": true
+      "enabled": false
     },
     {
       "title": "Outperforming the Index",
