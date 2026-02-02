@@ -75,18 +75,39 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
     setVisibleProjects((prev) => prev + 3)
   }
 
-  const parseMarkdownBold = (text: string) => {
-    const parts = text.split("**")
-    return parts.map((part, index) => {
-      if (index % 2 === 0) {
-        return <span key={index}>{part}</span>
+  const parseMarkdown = (text: string) => {
+    const elements: React.ReactNode[] = []
+    // Match **bold** and [text](url)
+    const regex = /(\*\*(.+?)\*\*|\[(.+?)\]\((.+?)\))/g
+    let lastIndex = 0
+    let match
+    let key = 0
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        elements.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>)
       }
-      return (
-        <span key={index} className="text-foreground">
-          {part}
-        </span>
-      )
-    })
+      if (match[2]) {
+        // Bold
+        elements.push(
+          <span key={key++} className="text-foreground">
+            {match[2]}
+          </span>
+        )
+      } else if (match[3] && match[4]) {
+        // Link
+        elements.push(
+          <a key={key++} href={match[4]} target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors duration-300">
+            {match[3]}
+          </a>
+        )
+      }
+      lastIndex = match.index + match[0].length
+    }
+    if (lastIndex < text.length) {
+      elements.push(<span key={key++}>{text.slice(lastIndex)}</span>)
+    }
+    return elements
   }
 
   return (
@@ -143,7 +164,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
 
               <div className="space-y-6 max-w-md">
                 <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
-                  {parseMarkdownBold(data.intro.description)}
+                  {parseMarkdown(data.intro.description)}
                 </p>
 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-sm text-muted-foreground">
@@ -214,7 +235,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                       <h3 className="text-lg sm:text-xl font-medium">{job.company}</h3>
                       <div className="text-muted-foreground">{job.role}</div>
                     </div>
-                    <p className="text-muted-foreground leading-relaxed max-w-lg">{parseMarkdownBold(job.description)}</p>
+                    <p className="text-muted-foreground leading-relaxed max-w-lg">{parseMarkdown(job.description)}</p>
                   </div>
 
                   <div className="lg:col-span-4 flex flex-col gap-2 lg:items-end mt-2 lg:mt-0">
@@ -277,7 +298,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                         )}
                       </div>
 
-                      <p className="text-muted-foreground leading-relaxed">{parseMarkdownBold(project.description)}</p>
+                      <p className="text-muted-foreground leading-relaxed">{parseMarkdown(project.description)}</p>
 
                       <div className="flex flex-wrap gap-2 pt-2">
                         {project.tech.map((tech) => (
@@ -416,7 +437,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
 
               <div className="space-y-6">
                 <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
-                  {parseMarkdownBold(data.connect.description)}
+                  {parseMarkdown(data.connect.description)}
                 </p>
 
                 <div className="grid sm:grid-cols-2 gap-4">
