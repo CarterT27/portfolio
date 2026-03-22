@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import Script from "next/script"
 import { useEffect, useRef, useState } from "react"
 import { useTheme } from "next-themes"
 import data from "@/app/data.json"
@@ -112,8 +111,6 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">
-      <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="lazyOnload" />
-      <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
       <div className="fixed inset-0 hidden lg:flex items-center justify-center pointer-events-none z-0 opacity-[0.09]">
         <MagnetLines
           rows={9}
@@ -440,7 +437,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                   {parseMarkdown(data.connect.description)}
                 </p>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="max-w-sm">
                   <button
                     onClick={() => setShowFeedbackForm(true)}
                     className="group flex flex-col items-start p-5 border border-border rounded-lg hover:border-muted-foreground/30 hover:bg-muted/5 transition-all duration-300 text-left cursor-pointer"
@@ -463,36 +460,6 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                     <div className="space-y-1">
                       <div className="text-base font-medium">Send me a message</div>
                       <div className="text-xs text-muted-foreground line-clamp-1">Feedback/Questions</div>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      // @ts-ignore
-                      window.Calendly?.initPopupWidget({
-                        url: "https://calendly.com/carter-tran/30min?hide_event_type_details=1",
-                      })
-                    }}
-                    className="group flex flex-col items-start p-5 border border-border rounded-lg hover:border-muted-foreground/30 hover:bg-muted/5 transition-all duration-300 text-left cursor-pointer"
-                  >
-                    <div className="mb-4 text-muted-foreground group-hover:text-foreground transition-colors">
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-base font-medium">Schedule a meeting</div>
-                      <div className="text-xs text-muted-foreground line-clamp-1">Meeting/Consultation</div>
                     </div>
                   </button>
                 </div>
