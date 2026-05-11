@@ -96,7 +96,7 @@
     },
     {
       "title": "Puzzles",
-      "description": "Jane Street [April 2026](https://www.janestreet.com/puzzles/can-u-dig-it-index/) (Top 20), [February 2026](https://www.janestreet.com/puzzles/subtiles-2-index/) (Top 10), [December 2025](https://www.janestreet.com/puzzles/robot-javelin-index/); IBM Ponder This [May 2026](https://research.ibm.com/blog/ponder-this-may-2026)",
+      "description": "Jane Street [May 2026](https://www.janestreet.com/puzzles/arch-madness-index/), [April 2026](https://www.janestreet.com/puzzles/can-u-dig-it-index/) (Top 20), [February 2026](https://www.janestreet.com/puzzles/subtiles-2-index/) (Top 10), [December 2025](https://www.janestreet.com/puzzles/robot-javelin-index/); IBM Ponder This [May 2026](https://research.ibm.com/blog/ponder-this-may-2026)",
       "tech": ["Problem Solving"],
       "enabled": true
     },
