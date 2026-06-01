@@ -15,6 +15,14 @@
   "work": [
     {
       "year": "2026",
+      "role": "Software Engineering",
+      "company": "Palantir",
+      "description": "Working on the Gotham Product in Palo Alto.",
+      "tech": [],
+      "enabled": true
+    },
+    {
+      "year": "2026",
       "role": "Research",
       "company": "Fermilab",
       "description": "Working on machine learning and reinforcement learning algorithms for control systems and particle physics.",
@@ -96,7 +104,7 @@
     },
     {
       "title": "Puzzles",
-      "description": "Jane Street [May 2026](https://www.janestreet.com/puzzles/arch-madness-index/), [April 2026](https://www.janestreet.com/puzzles/can-u-dig-it-index/) (Top 20), [February 2026](https://www.janestreet.com/puzzles/subtiles-2-index/) (Top 10), [December 2025](https://www.janestreet.com/puzzles/robot-javelin-index/); IBM Ponder This [May 2026](https://research.ibm.com/blog/ponder-this-may-2026)",
+      "description": "Jane Street [June 2026](https://www.janestreet.com/puzzles/regional-artwork-index/) (Top 10), [May 2026](https://www.janestreet.com/puzzles/arch-madness-index/), [April 2026](https://www.janestreet.com/puzzles/can-u-dig-it-index/) (Top 20), [February 2026](https://www.janestreet.com/puzzles/subtiles-2-index/) (Top 10), [December 2025](https://www.janestreet.com/puzzles/robot-javelin-index/); IBM Ponder This [May 2026](https://research.ibm.com/blog/ponder-this-may-2026)",
       "tech": ["Problem Solving"],
       "enabled": true
     },
