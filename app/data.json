@@ -96,16 +96,16 @@
   ],
   "projects": [
     {
+      "title": "Puzzles",
+      "description": "Jane Street [June 2026](https://www.janestreet.com/puzzles/regional-artwork-index/) (Top 10), [May 2026](https://www.janestreet.com/puzzles/arch-madness-index/), [April 2026](https://www.janestreet.com/puzzles/can-u-dig-it-index/) (Top 20), [February 2026](https://www.janestreet.com/puzzles/subtiles-2-index/) (Top 10), [December 2025](https://www.janestreet.com/puzzles/robot-javelin-index/); IBM Ponder This [June 2026](https://research.ibm.com/blog/ponder-this-june-2026) (Top 15), [May 2026](https://research.ibm.com/blog/ponder-this-may-2026) (Top 15)",
+      "tech": ["Problem Solving"],
+      "enabled": true
+    },
+    {
       "title": "WaitWhat",
       "description": "Won **2 awards** at CMU's NexHacks hackathon (**1500+ builders**). AI-powered tool that helps users stay informed and engaged during conversations.",
       "tech": ["AI", "Hackathon"],
       "link": "https://www.waitwhat.tech/",
-      "enabled": true
-    },
-    {
-      "title": "Puzzles",
-      "description": "Jane Street [June 2026](https://www.janestreet.com/puzzles/regional-artwork-index/) (Top 10), [May 2026](https://www.janestreet.com/puzzles/arch-madness-index/), [April 2026](https://www.janestreet.com/puzzles/can-u-dig-it-index/) (Top 20), [February 2026](https://www.janestreet.com/puzzles/subtiles-2-index/) (Top 10), [December 2025](https://www.janestreet.com/puzzles/robot-javelin-index/); IBM Ponder This [May 2026](https://research.ibm.com/blog/ponder-this-may-2026)",
-      "tech": ["Problem Solving"],
       "enabled": true
     },
     {
