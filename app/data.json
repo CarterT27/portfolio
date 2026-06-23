@@ -102,6 +102,12 @@
       "enabled": true
     },
     {
+      "title": "Macro Placement Challenge",
+      "description": "Finalist (Top 7) in [challenge hosted by Hudson River Trading and Partcl](https://github.com/partcleda/macro-place-challenge-2026)",
+      "tech": ["Problem Solving", "AI", "GPU Programming"],
+      "enabled": true
+    },
+    {
       "title": "WaitWhat",
       "description": "Won **2 awards** at CMU's NexHacks hackathon (**1500+ builders**). AI-powered tool that helps users stay informed and engaged during conversations.",
       "tech": ["AI", "Hackathon"],
