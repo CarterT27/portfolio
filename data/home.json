@@ -1,0 +1,61 @@
+{
+    "name": "Carter Tran",
+    "description": "Student at the University of Chicago thinking about AI and the software underneath it.",
+    "bio": {
+        "default": [
+            "I'm a student at the University of Chicago studying computational and applied mathematics. Most of my time is spent working on side projects and learning more about the current capabilities of frontier AI models in various fields such as quantitative trading, prediction markets, low-level engineering, and devtools.",
+            "I've had the privilege of interning at places like Palantir, Amazon, and Nationwide. Before I transferred, I studied data science and math-econ at UC San Diego. I've held positions in tutoring, research, and trading clubs throughout undergrad."
+        ],
+        "long": [
+            "My first real dive into programming was in [my high school's](https://www.usnews.com/education/best-high-schools/arizona/districts/basis-charter-schools-inc/basis-chandler-147202) AP Computer Science course. However, I've had an interest in computers since a young age. I built a PC at ten years old and learned to host Minecraft servers for my friends to avoid paying for one.",
+            "I started with data science at UC San Diego because it looked like the most direct path into machine learning. I tutored intro programming courses, and I spent a year in [a lab](https://neurosciences.ucsd.edu/research/labs/ung/team.html) fine-tuning an EEG transformer to detect seizures in real time.",
+            "At UCSD I spent most of my time outside of coursework competing in trading competitions with [Triton Quantitative Trading](https://tquantt.com/). I had a great time going from a freshman who knew nothing about quantitative finance to being on the board. My favorite part (other than competing) was being a resource to other students who were just like me.",
+            "Eventually I realized that I could use the tools in practice, but wanted a stronger foundation in the underlying mathematics. So I transferred to the University of Chicago to study computational and applied mathematics. Partly for the challenge, and partly to put myself somewhere new and see what I'd do with it.",
+            "Transferring was hard, and I definitely miss the people and opportunities in San Diego. However, I do think that UChicago has been a great place for my personal development and has exposed me to new experiences and environments that I would otherwise not have had access to.",
+            "Lately I've drifted lower in the stack. In addition to shiny features and application polish, I've started to care about how fast things run. I've been spending time learning about GPUs and how I can accelerate computation with parallel programming and low-level optimization.",
+            "I've also been gaining experience in industry. The past two summers I've interned at Amazon and Palantir as a software engineer. At Amazon I learned a ton about serverless computing and what it's like working at a massive scale. Palantir kept the engineering bar high while exposing me to new problems in defense tech, and the work culture was amazing.",
+            "Through all of it, I've been competing. My team placed [9th in the world](https://github.com/CarterT27/imc-prosperity-3) in IMC's Prosperity trading competition. I was a national finalist in [WorldQuant's International Quant Championship](https://www.worldquant.com/brain/iqc/), finished on the podium multiple times in QuantConnect's [Quant League](https://www.quantconnect.com/league/2024-q3/), and more recently placed 8th in the [HRT Macro Placement Challenge](https://github.com/partcleda/macro-place-challenge-2026). When I remember, I try my hand at [Jane Street's](https://www.janestreet.com/puzzles/) and [IBM's](https://research.ibm.com/haifa/ponderthis/index.shtml) monthly puzzles.",
+            "I also build things and lead teams for clubs on campus, notably [Oracle Trading's](https://oracletrading.org/) trading and research infrastructure and [Paragon Global Investments](https://www.paragoninvestments.org/) member portal and upcoming project infrastructure.",
+            "To be honest, I don't have a concrete plan for where I'm headed. Right now I'm thinking about AI and software, and about how much of what I build is about to change. The world is changing rapidly, and I'm continuously adapting and increasing my learning rate to capitalize on opportunities and technological shifts."
+        ]
+    },
+    "workingOn": [
+        {
+            "title": "cstack",
+            "note": "My own harness of harnesses"
+        },
+        {
+            "title": "Oracle Trading",
+            "note": "Prediction Markets Trading",
+            "url": "https://oracletrading.org/"
+        }
+    ],
+    "thinking": [],
+    "listening": [
+        {
+            "title": "Niteharts 2025 Day 2 Closer",
+            "by": "Zedd B2B Knock2",
+            "note": "Greatest festival closer of all time",
+            "url": "https://www.youtube.com/watch?v=1EaNEtjWw6s"
+        },
+        {
+            "title": "SYBER: 008",
+            "by": "Baby J B2B Tye Turner",
+            "note": "Such a great setlist",
+            "url": "https://youtu.be/vUmcB09Qvq4?si=qWQnDbVkDtNK6dm0"
+        }
+    ],
+    "playing": [
+        {
+            "title": "Clash Royale",
+            "note": "Log Bait Main",
+            "url": "https://royaleapi.com/player/2VU8U8RJ"
+        }
+    ],
+    "elsewhere": [
+        { "name": "GitHub", "url": "https://github.com/CarterT27" },
+        { "name": "X", "url": "https://x.com/cartertran_" },
+        { "name": "LinkedIn", "url": "https://www.linkedin.com/in/cartertran/" },
+        { "name": "Email", "url": "mailto:contact@cartertran.com" }
+    ]
+}

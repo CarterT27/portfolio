@@ -1,0 +1,275 @@
+:root {
+  --bg: #1b1a19;
+  --fg: #e8e5df;
+  --muted: #aaa59e;
+  --border: #302e2b;
+  --rule: rgba(170, 165, 158, 0.3);
+  color-scheme: dark;
+}
+
+.light {
+  --bg: #f6f4ef;
+  --fg: #1b1a19;
+  --muted: #6e6a63;
+  --border: #dfdbd2;
+  --rule: rgba(110, 106, 99, 0.35);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 17px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+    "Times New Roman", serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--fg) 18%, transparent);
+}
+
+a.link,
+button.link {
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 3px;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+
+a.link:hover,
+button.link:hover {
+  color: var(--fg);
+  text-decoration-color: var(--muted);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Layout */
+
+main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+.page {
+  display: grid;
+  gap: 2.5rem;
+}
+
+article {
+  max-width: 580px;
+}
+
+aside {
+  display: none;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0 0 1rem;
+}
+
+section {
+  margin-top: 3.5rem;
+}
+
+p {
+  margin: 0;
+}
+
+.prose > p + p {
+  margin-top: 1.25rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.875rem;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Plain block items, not flex: flex rows make drag-selection jump whole
+   items at a time. The marker is positioned, so it never enters the
+   selection. */
+.bullets li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+.bullets li + li {
+  margin-top: 0.5rem;
+}
+
+.bullets li::before {
+  content: "\25AA";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  user-select: none;
+}
+
+.stack li + li {
+  margin-top: 0.75rem;
+}
+
+/* Bio toggle */
+
+.bio-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 2.5rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.bio-head .modes {
+  display: flex;
+  gap: 1rem;
+}
+
+.bio-head button {
+  color: var(--muted);
+  text-transform: capitalize;
+  transition: color 0.2s;
+}
+
+.bio-head button:hover,
+.bio-head button[aria-pressed="true"] {
+  color: var(--fg);
+}
+
+.prose {
+  margin-top: 1.25rem;
+  animation: fade 0.35s ease-out both;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Right-hand panel */
+
+.panel canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.life canvas {
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+.panel-caption {
+  margin-top: 0.75rem;
+  min-height: 2.6em;
+  line-height: 1.5;
+}
+
+.panel-caption .gen {
+  float: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.fg {
+  color: var(--fg);
+}
+
+footer {
+  margin-top: 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+@media (min-width: 640px) {
+  main {
+    padding: 3.5rem 2rem;
+  }
+  h1 {
+    font-size: 2.65rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  main {
+    padding: 3.5rem 2.5rem;
+  }
+  .page {
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 5rem;
+  }
+  aside {
+    display: block;
+  }
+  /* A viewport-tall sticky box keeps the panel vertically centered while
+     the text scrolls past it. The negative margins swallow main's vertical
+     padding so a short page is exactly one viewport tall, not taller. */
+  aside > div {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    margin: -3.5rem 0;
+  }
+  aside > div > * {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prose {
+    animation: none;
+  }
+}

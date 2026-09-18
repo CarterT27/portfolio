@@ -1,22 +1,37 @@
-# Portfolio Website
+# cartertran.com
 
-## Built With
+A one-page personal site built with [Fresh](https://fresh.deno.dev) on Deno. No
+CSS framework, no component library: one route, three small islands, and about
+200 lines of plain CSS.
 
-- [Next.js](https://nextjs.org/) - React framework
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
+## Editing
 
-## 📦 Getting Started
+Everything on the page comes from `data/home.json`:
+
+- `bio.default` and `bio.long` are arrays of paragraphs. Inline
+  `[links](https://...)`, `**bold**` and `*italic*` are supported.
+- `thinking` is a list of open questions.
+- `listening` and `playing` are hidden while empty. Add entries like
+  `{ "title": "...", "by": "...", "note": "why", "url": "..." }` (no `by` for
+  games) and the sections appear.
+- `elsewhere` is the link row at the bottom.
+
+## Running
+
+Install [Deno](https://docs.deno.com/runtime/getting_started/installation),
+then:
 
 ```bash
-# Clone the repository
-git clone https://github.com/CarterT27/portfolio
-
-# Install dependencies
-bun install
-
-# Run development server
-bun dev
+deno install
+deno task dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the portfolio.
+## Building
+
+```bash
+deno task build
+deno task start
+```
+
+`deno task build` writes `_fresh/`; `deno task start` serves it. Deno Deploy
+runs the build task automatically.
