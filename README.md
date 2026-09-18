@@ -26,12 +26,14 @@ deno install
 deno task dev
 ```
 
-## Building
+## Building for Cloudflare Pages
 
 ```bash
-deno task build
-deno task start
+bun install
+bun run build
 ```
 
-`deno task build` writes `_fresh/`; `deno task start` serves it. Deno Deploy
-runs the build task automatically.
+The build renders the homepage and copies its interactive assets to `out/`.
+In the existing Cloudflare Pages project, use `bun install && bun run build`
+as the build command and `out` as the build output directory. Keep the root
+directory blank and the production branch set to `main`.
