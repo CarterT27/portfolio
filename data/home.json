@@ -21,10 +21,6 @@
     },
     "workingOn": [
         {
-            "title": "cstack",
-            "note": "My own harness of harnesses"
-        },
-        {
             "title": "Oracle Trading",
             "note": "Prediction Markets Trading",
             "url": "https://oracletrading.org/"
