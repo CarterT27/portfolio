@@ -1,45 +1,23 @@
 # cartertran.com
 
-A one-page personal site built with [Fresh](https://fresh.deno.dev) on Deno. No
-CSS framework, no component library: one route, three small islands, and about
-200 lines of plain CSS.
+A one-page personal site in plain HTML, CSS and JavaScript. There is no framework
+and no build step: `public/` is exactly what gets deployed.
 
-## Editing
-
-Everything on the page comes from `data/home.json`:
-
-- `bio.default` and `bio.long` are arrays of paragraphs. Inline
-  `[links](https://...)`, `**bold**` and `*italic*` are supported.
-- `thinking` is a list of open questions.
-- `listening` and `playing` are hidden while empty. Add entries like
-  `{ "title": "...", "by": "...", "note": "why", "url": "..." }` (no `by` for
-  games) and the sections appear.
-- `elsewhere` is the link row at the bottom.
+- `public/index.html` holds all the content, plus a short script for the bio and
+  theme toggles.
+- `public/style.css` holds the styles.
+- `public/life.js` runs the Game of Life. Its patterns are at the top of the file.
 
 ## Running
 
-Install [Deno](https://docs.deno.com/runtime/getting_started/installation),
-then:
+Open `public/index.html` in a browser, or serve it:
 
 ```bash
-deno install
-deno task dev
+python3 -m http.server -d public
 ```
 
-## Building for Cloudflare Pages
+## Deploying on Cloudflare Pages
 
-```bash
-deno install --frozen
-deno task build:pages
-```
-
-The build renders the homepage and copies its interactive assets to `out/`.
-Cloudflare Pages does not include Deno in its build image. Use this build command
-in the Pages dashboard:
-
-```bash
-curl -fsSL https://deno.land/install.sh | sh -s v2.9.6 && $HOME/.deno/bin/deno install --frozen && $HOME/.deno/bin/deno task build:pages
-```
-
-Set the build output directory to `out`, leave the root directory blank, and
-use `main` as the production branch.
+In the Pages dashboard, leave the build command empty, set the build output
+directory to `public`, leave the root directory blank, and use `main` as the
+production branch.

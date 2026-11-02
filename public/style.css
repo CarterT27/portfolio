@@ -126,26 +126,6 @@ ul {
   padding: 0;
 }
 
-/* Plain block items, not flex: flex rows make drag-selection jump whole
-   items at a time. The marker is positioned, so it never enters the
-   selection. */
-.bullets li {
-  position: relative;
-  padding-left: 1.1rem;
-}
-
-.bullets li + li {
-  margin-top: 0.5rem;
-}
-
-.bullets li::before {
-  content: "\25AA";
-  position: absolute;
-  left: 0;
-  color: var(--muted);
-  user-select: none;
-}
-
 .stack li + li {
   margin-top: 0.75rem;
 }
