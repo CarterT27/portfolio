@@ -1,12 +1,3 @@
-# Fresh build output
-_fresh/
-out/
-node_modules/
-
-# Vite
-vite.config.ts.timestamp-*
-.vite/
-
 # Local
 .env
 .env.*
